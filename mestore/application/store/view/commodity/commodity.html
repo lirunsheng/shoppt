@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/store/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/store/css/view.css"/>
+    <link rel="stylesheet" href="__STATIC__/store/css/thinkphp-page.css"/>
+    <link rel="icon" href="__STATIC__/favicon.ico">
+    <title>管理后台</title>
+</head>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-page-header">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div class="form-box">
+                        <div class="layui-form layui-form-item">
+                            <div class="layui-inline">
+                              <label class="layui-form-label">商品搜索：</label>
+                                <div class="layui-input-inline">
+                                  <input type="text" name="goods_name" id="goods_name" autocomplete="off" class="layui-input">
+                                </div>
+                              <label class="layui-form-label">条形码：</label>
+                              <div class="layui-input-inline">
+                                <input type="text" name="barcode" id="barcode" autocomplete="off" class="layui-input">
+                               </div>
+                                <button type="button" class="layui-btn layui-btn-blue" id="search">查询</button>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space20" id="commodity_list">
+            {volist name='commodity' id="vor"}
+            <div class="layui-col-sm6 layui-col-md3 layui-anim layui-anim-fadein">
+                <div class="layui-card" id="commodity{$vor.id}">
+                    <div class="layui-card-body chart-card">
+                        <div class="chart-header">
+                            <div class="metawrap">
+                                <div class="meta">
+                                    <span>商品条形码：{$vor.barcode}</span>
+                                    <input type="hidden" name="commodity_id" class="commodity_id" value="{$vor.id}">
+                                </div>
+                                <div style="white-space: nowrap;font-size: 20px" >{$vor.goods_name}</div>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="contentwrap">
+                                分类：{$vor.goods_style}
+                            </div>
+                            <div class="contentwrap">
+                                单价：￥{$vor.goods_price}
+                            </div>
+                        </div>
+                        <div class="chart-footer">
+                            <div class="field">
+                                <span>库存：</span>
+                                <span>{$vor.goods_stork}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/volist}
+             <div class="layui-form layui-form-item">
+                {$page}
+            </div>
+            </div>
+           
+        </div>
+    </div>
+    <script type="text/javascript" src="__STATIC__/store/jquery.min.js"></script>
+    <script src="__STATIC__/store/layui.js"></script>
+    <script src="__STATIC__/store/layui.all.js"></script>
+    <script>
+      var element = layui.element;
+      var form = layui.form;
+      
+
+      $("#search").click(function(){
+        var goods_name=$("#goods_name").val();
+        var barcode=$("#barcode").val();
+        $.post('/store/commodity/search',{'goods_name':goods_name,'barcode':barcode},function(re){
+          $("#commodity_list").empty();
+          $("#commodity_list").append(re);
+        });
+      });
+
+      $(".commodity_id").each(function(){
+        var commodity_id=$(this).val();
+        $("#commodity"+$(this).val()).click(function(){
+            $.post('/store/commodity/detail',{'commodity_id':commodity_id},function(ret){
+                layer.open({
+                    title:"商品修改",
+                    content:""+ret
+                    ,
+                    btn:false,
+                    area:['640px','480px'],
+                });
+            });
+        });
+      });
+
+      
+    </script>
+</body>
+</html>

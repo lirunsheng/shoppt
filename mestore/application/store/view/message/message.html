@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="__STATIC__/store/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/store/css/view.css"/>
+    <title></title>
+</head>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-row">
+            <div class="layui-card layui-anim layui-anim-upbit">
+                <div class="layui-card-header">消息列表</div>
+                <div class="layui-card-body">
+                  <div class="layui-collapse" lay-filter="message">
+                    {volist name='message' id='vo'}
+                    <div class="layui-colla-item">
+                      <h2 class="layui-colla-title" id="{$vo.id}">{$vo.message_title} {$vo.addtime|date="Y-m-d H:i",###}</h2>
+                      <div class="layui-colla-content">{$vo.message}</div>
+                    </div>
+                    {/volist}
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="__STATIC__/store/layui.js"></script>
+    <script src="__STATIC__/store/layui.all.js"></script>
+    <script type="text/javascript" src="__STATIC__/store/jquery.min.js"></script>
+    <script>
+      $("#barcode").focus();
+      var form = layui.form
+        ,layer = layui.layer;
+        var element = layui.element;
+
+        element.on('collapse(message)', function(data){
+          var id=data['title'][0]['id'];
+          $.post('/store/message/isread',{'id':id},function(ret){
+            console.log(ret);
+          });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+{volist name='order' id="vor"}
+<div class="layui-col-sm6 layui-col-md3 layui-anim layui-anim-fadein">
+    <div class="layui-card" id="orderdetail{$vor.id}">
+        <div class="layui-card-body chart-card">
+            <div class="chart-header">
+                <div class="metawrap">
+                    <div class="meta">
+                        <span>订单编号：{$vor.id}</span>
+                        <input type="hidden" name="order_id" class="order_id" value="{$vor.id}">
+                    </div>
+                    <div class="total" >{$vor.status}</div>
+                </div>
+            </div>
+            <div class="chart-body">
+                <div class="contentwrap">
+                    订单总价：￥{$vor.order_total}
+                </div>
+            </div>
+            <div class="chart-footer">
+                <div class="field">
+                    {php}if($vor['isonline']==0)echo "创建订单方式：现场支付";else echo "创建订单方式：线上支付";{/php}
+                </div>
+                <div class="field">
+                    <span>添加时间：</span>
+                    <span>{$vor.addtime|date="Y-m-d H:i",###}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/volist}
+<div class="layui-form layui-form-item">
+    {$page}
+</div>
+<script type="text/javascript">
+    //  $(".order_id").each(function(){
+    //     var order_id=$(this).val();
+    //     var order_total=$(this).parents().nextAll(".chart-body").html();
+    //     var order_status=$(this).parent().next(".total").html();
+    //     var remark;
+    //     var tell;
+    //     var already;
+    //     var addtime;
+    //     var address;
+    //     var user_id;
+    //     function timestampToTime(timestamp) {
+    //         var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    //         var Y = date.getFullYear() + '-';
+    //         var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+    //         var D = date.getDate() + ' ';
+    //         var h = date.getHours() + ':';
+    //         var m = date.getMinutes() + ':';
+    //         var s = date.getSeconds();
+    //         return Y+M+D+h+m+s;
+    //     }
+    //     var isonline;
+    //     $("#orderdetail"+$(this).val()).click(function(){
+    //         $.post('/store/console/selectorder',{'order_id':order_id},function(ret){
+    //             var obj=JSON.parse(ret['order_info']);
+    //             $.each(obj,function(key,val){
+    //                 $("#tableord").append("<tr id='tr'>"
+    //                     +"<td>"+key+"</td>"
+    //                     +"<td>"+val+"</td>"
+    //                     +"</tr>");
+    //             });
+    //             if(ret['status']=='待发货'){
+    //                 already="阅读订单信息后点击“确认发货”<br><a href='/store/console/sendenter?order_id="+order_id+"' class='layui-btn layui-btn-normal'>确认发货</a><br>";
+    //             }
+    //             else{
+    //                 already=" ";
+    //             }
+    //             if(ret['remark']!=""){
+    //                 console.log(ret['remark']);
+    //                 remark="订单备注："+ret['remark']+"<br>";
+    //             }
+    //             else remark=" ";
+    //             user_id=ret['user_id'];
+    //             address=ret['order_address'];
+    //             addtime=ret['addtime'];
+    //         });
+    //         setTimeout(function(){
+    //             layer.open({
+    //                 title:"确认订单",
+    //                 content:"订单编号："+order_id+"<br>"
+    //                 +"订单状态："+order_status+"<br>"
+    //                 +"订单信息：<br>"+$("#table").html()
+    //                 +order_total     //订单总价
+    //                 +"用户ID："+user_id+"<br>"
+    //                 +"收货地址："+address+"<br>"       
+    //                 +remark
+    //                 +already
+    //                 +"添加时间："+timestampToTime(addtime)
+    //                 ,
+    //                 btn:false,
+    //                 shadeClose:true,
+    //                 end:function(){
+    //                     $("tr").remove('#tr');
+    //                 },
+    //             });
+    //         },800); 
+    //     });
+    // });
+    $(".order_id").each(function(){
+        var order_id=$(this).val();
+        var order_total=$(this).parents().nextAll(".chart-body").html();
+        var order_status=$(this).parent().next(".total").html();
+        var user_id;
+        var tell;
+        var remark;
+        var already;
+        var address;
+        var addtime;
+        var presend;
+        var addressinfo;
+        function timestampToTime(timestamp) {
+            var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+            var Y = date.getFullYear() + '-';
+            var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+            var D = date.getDate() + ' ';
+            var h = date.getHours() + ':';
+            var m = date.getMinutes() + ':';
+            var s = date.getSeconds();
+            return Y+M+D+h+m+s;
+        }
+        var isonline;
+        $("#orderdetail"+$(this).val()).click(function(){
+            $.post('/store/console/selectorder',{'order_id':order_id},function(ret){
+
+                var obj=JSON.parse(ret['order_info']);
+                console.log(obj);
+                var obj2=ret['0'];
+                $.each(obj,function(key,val){
+                    $("#tableord").append("<tr id='tr"+key+"' class='tr'>"
+                    +"<td>"+key+"</td>"
+                    +"<td>"+val+"</td>"
+                    +"</tr>");
+                });
+                $.each(obj2,function(key,val){
+                    $("#tr"+key).append("<td>"+val+"</td>"
+                    +"</tr>");
+                });
+                if(ret['order_address']==""){
+                    addressinfo="收货信息有误<br>";
+                }
+                else{
+                    address=JSON.parse(ret['order_address']);
+                    console.log(address);
+                    $("#tableaddress").append("<thead class='tr'><tr class='tr'><th>收货人</th><th>电话</th></tr></thead>"
+                        +"<tr class='tr'><td>"+address['name']+"</td><td>"+address['tell']+"</td></tr>"
+                        +"<thead class='tr'><tr class='tr'><th>收货地址</th><th>门牌号</th></tr></thead>"
+                        +"<tr class='tr'><td>"+address['area']+"</td><td>"+address['door']+"</td></tr>");
+                    addressinfo="收货信息：<br>"+$("#address").html();
+                }
+                if(ret['status']=='待发货'){
+                    already="阅读订单信息后点击“确认发货”<br><a href='/store/console/sendenter?order_id="+order_id+"' class='layui-btn layui-btn-normal'>确认发货</a><br>";
+                }
+                else if(ret['status']=='待收货'){
+                    already="";
+                }
+                else already="";
+                if(ret['remark']!=""){
+                    remark="订单备注："+ret['remark']+"<br>";
+                }
+                else remark=' ';
+                presend=ret['order_time'];
+                if(presend==""){
+                    presend="立刻送达";
+                }
+                user_id=ret['user_id'];
+                addtime=ret['addtime'];
+            });
+            setTimeout(function(){
+                layer.open({
+                    title:"确认订单",
+                    content:"订单编号："+order_id+"<br>"
+                    +"订单状态："+order_status+"<br>"
+                    +"订单信息：<br>"+$("#table").html()
+                    +order_total     //订单总价
+                    +addressinfo
+                    +"预计到达时间：<p style='color:red'>"+presend+"</p>"      
+                    +remark            //订单备注
+                    +already           //获取发货信息
+                    +"添加时间："+timestampToTime(addtime)
+                    ,
+                    btn:false,
+                    shadeClose:true,
+                    area:'480px',
+                    end:function(){
+                        $("tr").remove('.tr');
+                    },
+                });
+            },800); 
+        });
+    });
+</script>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="__STATIC__/store/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/store/css/view.css"/>
+    <title></title>
+</head>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-row">
+            <div class="layui-card layui-anim layui-anim-upbit">
+                <div class="layui-card-header">修改用户信息</div>
+                <form class="layui-form layui-card-body" action="/admin/users/update" enctype="multipart/form-data" method="post">
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="name" id="user_name" required  lay-verify="required" autocomplete="off"  class="layui-input" value="{$result.name}">
+ 
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="openid" required  lay-verify="required"  autocomplete="off" class="layui-input" readonly="true" value="{$result.openid}">
+                    </div>
+                  </div>
+
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">电话</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="tell" required  lay-verify="required"  autocomplete="off" class="layui-input" readonly="true" value="{$result.tell}">
+                    </div>
+                  </div>
+                
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">头像</label>
+                    <div class="layui-input-inline">
+                      <button type="button" class="layui-btn layui-btn-normal" style="height:38px;width:100px;">图片上传</button>
+                        <input type="file"  name="head_img" id="user-pic" style="height:38px;width:100px;border:1px solid red;margin-top:-38px;margin-left:-106px;opacity:0">
+                      <br/>
+                      <img src="{$result.head_img}" style="width: 200px;" />
+                    </div>
+                  </div>
+
+
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">地址</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="address" id="tell" required  lay-verify="required"  autocomplete="off" class="layui-input" value="{$result.address}">
+                    </div>
+                  </div>
+                  
+   
+                  <div class="layui-form-item">
+                    <div class="layui-input-block">
+                    <input type="hidden" name="id" value="{$result.id}" />
+                      <button type="submit" data-method="offset" data-type="auto" class="layui-btn layui-btn-normal" id="update">保存修改</button>
+                     
+                    </div>
+                  </div>
+                </form>  
+            </div>
+        </div>
+    </div>
+    <script src="__STATIC__/store/layui.all.js"></script>
+    <script type="text/javascript" src="__STATIC__/store/jquery.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="__STATIC__/store/echarts.min.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/store/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/store/css/login.css">
+    <link rel="icon" href="__STATIC__/favicon.ico">
+    <title>统计</title>
+</head>
+<body>
+     <div class="layui-content">
+        <div class="layui-row">
+
+            <div class="layui-card layui-anim layui-anim-upbit">
+                <div class="layui-card-header">订单统计表（重新加载页面需要等待2s）</div>
+                <div class="layui-card-body">
+                    <div id="main" style="width: 1000px;height: 600px"></div>
+                </div>
+            </div>
+             <div class="layui-card layui-anim layui-anim-upbit">
+                <div class="layui-card-header">营业额统计表（重新加载页面需要等待2s）</div>
+                <div class="layui-card-body">
+                    <div id="mainvo" style="width: 1000px;height: 600px"></div>
+                </div>
+            </div>
+            <div class="layui-card layui-anim layui-anim-upbit">
+                <div class="layui-card-header">营业总额</div>
+                <div class="layui-card-body">
+                    <h2>当月营业总额：{$ret.0}</h2>
+                    <h2>当月订单总数：{$ret.1}</h2>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <script src="__STATIC__/store/layui.all.js"></script>
+    <script type="text/javascript" src="__STATIC__/store/jquery.min.js"></script>
+    <script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+        var online;
+        var unonline;
+        var total;
+        var gettime;
+        var onlinevo;
+        var unonlinevo;
+        var totalvo;
+        $.post('/store/statistics/online',{},function(res){
+            online=res;
+        });
+        $.post('/store/statistics/unonline',{},function(res){
+            unonline=res;           
+        });
+        $.post('/store/statistics/total',{},function(res){
+            total=res;
+        });
+        $.post('/store/statistics/gettime',{},function(res){
+            gettime=res;
+        });
+        $.post('/store/statistics/onlinevo',{},function(res){
+            onlinevo=res;
+        });
+        $.post('/store/statistics/unonlinevo',{},function(res){
+            unonlinevo=res;           
+        });
+        $.post('/store/statistics/totalvo',{},function(res){
+            totalvo=res;
+        });
+
+        // 指定图表的配置项和数据
+        setTimeout(function(){
+            var myChart = echarts.init(document.getElementById('main'));
+            var option = {
+    title: {
+        text: '订单统计表（已完成）'
+    },
+    tooltip : {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            label: {
+                backgroundColor: '#6a7985'
+            }
+        }
+    },
+    legend: {
+        data:['总量','线上订单','现场订单',]
+    },
+    toolbox: {
+        feature: {
+            saveAsImage: {}
+        }
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : gettime
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'线上订单',
+            type:'line',
+            stack: '总量',
+            areaStyle: {},
+            data:online
+            // data:[online['0'],online['1'],online['2'],online['3'],online['4'],online['5'],online['6']]
+        },
+        {
+            name:'现场订单',
+            type:'line',
+            stack: '总量',
+            areaStyle: {},
+            // data:[2,2,2,2,2,2,2]
+            data:unonline
+        },
+        {
+            name:'总量',
+            type:'line',
+            stack: '总量',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'top'
+                }
+            },
+            areaStyle: {normal: {}},
+            // data:[3,3,3,3,3,3,3]
+            data:total
+        }
+    ]
+};
+        myChart.setOption(option);
+        },2000);
+        
+setTimeout(function(){
+            var myChart = echarts.init(document.getElementById('mainvo'));
+            var option = {
+    title: {
+        text: '营业额统计表（已完成）'
+    },
+    tooltip : {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            label: {
+                backgroundColor: '#6a7985'
+            }
+        }
+    },
+    legend: {
+        data:['总量','线上订单','现场订单',]
+    },
+    toolbox: {
+        feature: {
+            saveAsImage: {}
+        }
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : gettime
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'线上订单',
+            type:'line',
+            stack: '总量',
+            areaStyle: {},
+            data:onlinevo
+            // data:[online['0'],online['1'],online['2'],online['3'],online['4'],online['5'],online['6']]
+        },
+        {
+            name:'现场订单',
+            type:'line',
+            stack: '总量',
+            areaStyle: {},
+            // data:[2,2,2,2,2,2,2]
+            data:unonlinevo
+        },
+        {
+            name:'总量',
+            type:'line',
+            stack: '总量',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'top'
+                }
+            },
+            areaStyle: {normal: {}},
+            // data:[3,3,3,3,3,3,3]
+            data:totalvo
+        }
+    ]
+};
+        myChart.setOption(option);
+        },2500);
+        // 使用刚指定的配置项和数据显示图表。
+        
+</script>
+</body>
+
+</html>

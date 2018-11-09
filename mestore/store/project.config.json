@@ -1,0 +1,103 @@
+{
+	"description": "项目配置文件",
+	"packOptions": {
+		"ignore": []
+	},
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true
+	},
+	"compileType": "miniprogram",
+	"libVersion": "2.3.0",
+	"appid": "wx1c8e7d1e70478262",
+	"projectname": "2222222",
+	"debugOptions": {
+		"hidedInDevtools": []
+	},
+	"isGameTourist": false,
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"currentL": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": 9,
+			"list": [
+				{
+					"id": -1,
+					"name": "rearch",
+					"pathName": "page/index/search",
+					"query": ""
+				},
+				{
+					"id": 1,
+					"name": "order",
+					"pathName": "page/order/order",
+					"query": ""
+				},
+				{
+					"id": 2,
+					"name": "downOrder",
+					"pathName": "page/address/downOrder/downOrder",
+					"query": ""
+				},
+				{
+					"id": 3,
+					"name": "modifyAddre",
+					"pathName": "page/address/modifyAddre/modifyAddre",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "newAddre",
+					"pathName": "page/address/newAddre/newAddre",
+					"query": ""
+				},
+				{
+					"id": 5,
+					"name": "chooseAddre",
+					"pathName": "page/address/chooseAddre/chooseAddre",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "chooseAddre",
+					"pathName": "page/valuation/valuation",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "index",
+					"pathName": "page/index/index",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "入住",
+					"pathName": "page/storeenter/storeenter",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "shop",
+					"pathName": "page/shop/shop"
+				}
+			]
+		}
+	}
+}

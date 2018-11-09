@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/store/assets/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/store/assets/css/login.css">
+    <link rel="icon" href="__STATIC__/favicon.ico">
+    <title>管理后台</title>
+</head>
+<body class="login-wrap">
+    <div style="position: absolute;transform: translate(-50%,0);left: 50%;top: 150px;">
+        <h1 ">么么哒便利店</h1>
+    </div>
+    <div class="login-container">
+        <form class="login-form" action="/store/login/login" method="post" enctype="multipart/form-data" >
+            <div class="input-group">
+                <input type="text" name="store_tell" id="tell" class="input-field">
+                <label for="tell" class="input-label">
+                    <span class="label-title">手机号码</span>
+                </label>
+            </div>
+            <div class="input-group">
+                <input type="password" name="password" id="password" class="input-field">
+                <label for="password" class="input-label">
+                    <span class="label-title">密码</span>
+                </label>
+            </div>
+            <button type="submit" class="login-button" lay-submit lay-filter="loginstore">登录<i class="ai ai-enter"></i></button>
+            <button type="button" onclick="javascrtpt:window.location.href='/store/admission'" class="login-button">商家入驻<i class="ai ai-enter"></i></button>
+        </form>
+    </div>
+</body>
+<script type="text/javascript" src="__STATIC__/store/assets/jquery.min.js"></script>
+<script src="__STATIC__/store/assets/layui.js"></script>
+<script src="__STATIC__/store/login.js" data-main="login"></script>
+<script src="__STATIC__/store/assets/layui.all.js"></script>
+<script type="text/javascript" src="__STATIC__/store/login/jquery.md5.js"></script>
+<script type="text/javascript">
+    var status;
+    var pwd;
+    var md5;
+    $("#tell").change(function(){
+        $.post('/store/login/islogin',{'store_tell':$("#tell").val()},function(ret){
+            status=ret;
+        });
+    });
+
+    $("#password").change(function(){
+        $.post('/store/login/isloginpwd',{'store_tell':$("#tell").val(),'password':$("#password").val()},function(ret){
+
+            md5=$.md5($("#password").val());
+            pwd=ret;
+            console.log(md5);
+        });
+    });
+
+    var form = layui.form,layer = layui.layer;
+        layui.use('form', function(){
+        var form = layui.form;
+          
+        form.on('submit(loginstore)', function(data){
+            if(status==0){
+                layer.msg("你的店铺还未通过审核！请等待审核完毕后再登录！");
+                return false;
+            }
+            else if(pwd!=md5){
+                layer.msg("密码错误！");
+                return false;
+            }
+        });
+    });
+</script>
+</html>

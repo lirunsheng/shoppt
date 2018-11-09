@@ -1,0 +1,33 @@
+<view class="page" style='background:white;'>
+  <view class="weui-cells weui-cells_after-title">
+    <view   bindtap='redtodetail' class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      
+      <view class="weui-cell__bd">订单编号</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">{{orderlist.id}}</view>
+    </view>
+  </view>
+  <view wx:for="{{objectArray}}" wx:key="unique">
+    <view class="comment1-description" style="display:flex;flex-direction:row;">
+      <view class="comment1-description1">{{item.name}}</view>
+      <view class="star-pos" style="display:flex;flex-direction:row;">
+        <cover-image src="{{item.flag>=1? showstar: hidestar}}" class="starsM" bindtap="changeColor11" data-flat="{{item.unique}}"></cover-image>
+        <cover-image src="{{item.flag>=2? showstar: hidestar}}" class="starsM" bindtap="changeColor12" data-flat="{{item.unique}}"></cover-image>
+        <cover-image src="{{item.flag>=3? showstar: hidestar}}" class="starsM" bindtap="changeColor13" data-flat="{{item.unique}}"></cover-image>
+        <cover-image src="{{item.flag>=4? showstar: hidestar}}" class="starsM" bindtap="changeColor14" data-flat="{{item.unique}}"></cover-image>
+        <cover-image src="{{item.flag>=5? showstar: hidestar}}" class="starsM" bindtap="changeColor15" data-flat="{{item.unique}}"></cover-image>
+      </view>
+    </view>
+  </view>
+
+  <view class="weui-cells__title">文字评价</view>
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell">
+      <view class="weui-cell__bd">
+        <textarea class="weui-textarea" placeholder="{{content}}" style="height:6em" bindinput='length' />
+        <view class="weui-textarea-counter">{{length}}/50</view>
+      </view>
+    </view>
+  </view>
+  
+  <button class="weui-btn"  bindtap='submitinfo' type="primary">提交评价</button>
+</view>

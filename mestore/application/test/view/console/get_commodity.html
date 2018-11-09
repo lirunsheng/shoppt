@@ -1,0 +1,12 @@
+
+{volist name="barcode" id="vo"}
+<td name="name" id="name">{$vo.goods_name}</td>
+<td name="style" id="style">{$vo.goods_style}</td>
+<td name="barcode" id="barcode">{$vo.barcode}</td>
+<td name="number" id="number"><input type="text" name="num[]" id="num" value="1" onchange="gnum({$vo.barcode})" onfocus="temp({$vo.barcode})"" oninput="value=value.replace(/[^\d]/g,'')" autocomplete="off"></td>
+<td name="price" id="price">{$vo.goods_price}</td>
+<td name="totalprice" id="totalprice" class="{$vo.barcode}">{$vo.goods_price}</td>
+<td><a onclick="del({$vo.barcode})" class="layui-btn layui-btn-sm layui-btn-danger" id="del">删除</a></td>
+{/volist}
+
+

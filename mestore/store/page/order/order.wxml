@@ -1,0 +1,285 @@
+<!--index.wxml-->
+<view class='page'>
+  <!--顶部导航栏-->
+  <view class="swiper-tab">
+    <view class="tab-item {{currentTab==0 ? 'on' : ''}}" data-current="0" bindtap="swichNav">全部</view>
+    <view class="tab-item {{currentTab==1 ? 'on' : ''}}" data-current="1" bindtap="swichNav">待付款</view>
+    <view class="tab-item {{currentTab==2 ? 'on' : ''}}" data-current="2" bindtap="swichNav">待发货</view>
+    <view class="tab-item {{currentTab==3 ? 'on' : ''}}" data-current="3" bindtap="swichNav">待收货</view>
+    <view class="tab-item {{currentTab==4 ? 'on' : ''}}" data-current="4" bindtap="swichNav">待评价</view>
+  </view>
+  <!--内容主体-->
+
+  <swiper class="swiper" current="{{currentTab}}" duration="200" bindchange="swiperChange" style='height:{{height}}px'>
+
+    <!-- 全部页面 -->
+    <swiper-item>
+      <scroll-view style="height: {{height?height+'px':'auto'}}" scroll-y="{{true}}">
+        <view class="carts">
+          <view class="weui-pull">
+            <view class="weui-pull__tips">
+              <icon type="loading" class="weui-pull__loading"></icon>
+              <!-- <text>下拉刷新</text> -->
+            </view>
+
+            <view class="weui-panel__bd">
+              <!-- 111 -->
+              <view class="weui-form-preview" style='background:#f3f3f3'>
+                <view class="padding-wrap" wx:for="{{orderlist}}" wx:key="id">
+                  <view catchtap='redTodetail' data-id="{{index}}">
+                    <view>
+                      <text decode="{{true}}" space="{{true}}">&nbsp;&nbsp;</text>
+                      <text class="carts-price origin" style="font-size: 30rpx;color:#46a3ff;">订单状态：</text>
+                      <text class="weui-media-box" style="font-size: 30rpx;color:red;">{{item.status}}</text>
+                    </view>
+                    <text decode="{{true}}" space="{{true}}">&nbsp;&nbsp;</text>
+                    <text class="carts-price origin" style="font-size: 30rpx;color:#46a3ff;">商家：{{item.store_name}}</text>
+                    <text class="weui-media-box" style="font-size: 30rpx;color:#46a3ff;">订单号：{{item.id}}</text>
+                    <view class="operate">
+                    </view>
+                  </view>
+                  <view class="weui-form-preview__bd">
+                    <view class="weui-form-preview__item" wx:for="{{item.order_info}}" wx:for-item="itemlist" wx:for-index="goodsindex">
+                      <!-- <block wx:for="{{[1,2]}}" wx:if="{{index<2}}"> -->
+                      <view>
+                        <view class="weui-form-preview__label" style='font-size:28rpx'>{{goodsindex}}</view>
+                        <view class="weui-form-preview__value">{{itemlist}}份</view>
+                      </view>
+                      <!-- </block> -->
+                    </view>
+                  </view>
+
+                  <view class="operate" wx:if="{{item.status===('待付款')}}">
+                    <text class="all-total">总价：￥{{item.order_total}}</text>
+                    <text class="operate-item pay" bindtap="payorder" data-id="{{item.id}}" data-index="{{index}}">立刻支付</text>
+                    <text class="operate-item cancel" bindtap="delorder" data-id="{{item.id}}" data-index="{{index}}">取消订单</text>
+                  </view>
+                  <view class="operate" wx:if="{{item.status===('售后中')||item.status===('已完成')}}">
+                    <text class="all-total">总价：￥{{item.order_total}}</text>
+                    <text class="operate-item pay" bindtap="connectstore" data-id="{{item.id}}" data-tell="{{item.store_tell}}">联系商家</text>
+                    <text class="operate-item cancel" bindtap="redTodetail" data-id="{{index}}">查看订单</text>
+                  </view>
+                  <view class="operate" wx:if="{{item.status===('待发货')}}">
+                    <text class="all-total">总价：￥{{item.order_total}}</text>
+                    <text class="operate-item pay" bindtap="connectstore" data-id="{{item.id}}" data-tell="{{item.store_tell}}">联系商家</text>
+                    <text class="operate-item cancel" bindtap="delorder" data-id="{{item.id}}" data-index="{{index}}">取消订单</text>
+                  </view>
+                  <view class="operate" wx:if="{{item.status===('待收货')}}">
+                    <text class="all-total">总价：￥{{item.order_total}}</text>
+                    <text class="operate-item pay" bindtap="aftersale" data-id="{{item.id}}" data-storeid="{{item.store_id}}">申请售后</text>
+                    <text class="operate-item cancel" bindtap="conforder" data-id="{{item.id}}" data-index="{{index}}"> 确认收货</text>
+                  </view>
+                  <view class="operate" wx:if="{{item.status===('待评价')}}">
+                    <text class="all-total">总价：￥{{item.order_total}}</text>
+                    <text class="operate-item pay" bindtap="aftersale" data-id="{{item.id}}" data-storeid="{{item.store_id}}">申请售后</text>
+                    <text class="operate-item cancel" bindtap="redTovaluation" data-id="{{item.id}}" data-index="{{index}}">立即评价</text>
+                  </view>
+
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+      <!-- 111 -->
+    </swiper-item>
+
+
+    <!-- 待付款页面 -->
+    <swiper-item>
+      <scroll-view style="height: {{height?height+'px':'auto'}}" scroll-y="{{true}}">
+        <view class="carts">
+          <view class="weui-pull">
+            <view class="weui-pull__tips">
+              <icon type="loading" class="weui-pull__loading"></icon>
+              <!-- <text>下拉刷新</text> -->
+            </view>
+
+            <view class="weui-panel__bd">
+              <!-- 111 -->
+              <view class="weui-form-preview" style='background:#f3f3f3'>
+
+                <view wx:for="{{orderlist}}">
+                  <view wx:if="{{item.status===('待付款')}}" class="padding-wrap">
+                    <view catchtap='redTodetail' data-id="{{index}}">
+                      <view>
+                        <text decode="{{true}}" space="{{true}}">&nbsp;&nbsp;</text>
+                        <text class="carts-price origin" style="font-size: 30rpx;color:#46a3ff;">订单状态：</text>
+                        <text class="weui-media-box" style="font-size: 30rpx;color:red;">{{item.status}}</text>
+                      </view>
+                      <text decode="{{true}}" space="{{true}}">&nbsp;&nbsp;</text>
+                      <text class="carts-price origin" style="font-size: 30rpx;color:#46a3ff;">商家：{{item.store_name}}</text>
+                      <text class="weui-media-box" style="font-size: 30rpx;color:#46a3ff;">订单号：{{item.id}}</text>
+                      <view class="operate"></view>
+                    </view>
+
+                    <view class="weui-form-preview__bd">
+                      <view class="weui-form-preview__item" wx:for="{{item.order_info}}" wx:for-item="itemlist" wx:for-index="goodsindex">
+                        <view class="weui-form-preview__label" style='font-size:28rpx'>{{goodsindex}}</view>
+                        <view class="weui-form-preview__value">{{itemlist}}份</view>
+                      </view>
+                    </view>
+
+                    <view class="operate">
+                      <text class="all-total">总价：￥{{item.order_total}}</text>
+                     <text class="operate-item pay" bindtap="payorder" data-id="{{item.id}}" data-index="{{index}}">立刻支付</text>
+                    <text class="operate-item cancel" bindtap="delorder" data-id="{{item.id}}" data-index="{{index}}">取消订单</text>
+                    </view>
+
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+      <!-- 111 -->
+    </swiper-item>
+
+    <!-- 待发货 -->
+    <swiper-item>
+      <scroll-view style="height: {{height?height+'px':'auto'}}" scroll-y="{{true}}">
+        <view class="carts">
+          <view class="weui-pull">
+            <view class="weui-pull__tips">
+              <icon type="loading" class="weui-pull__loading"></icon>
+              <!-- <text>下拉刷新</text> -->
+            </view>
+
+            <view class="weui-panel__bd">
+              <!-- 111 -->
+              <view class="weui-form-preview" style='background:#f3f3f3'>
+
+                <view wx:for="{{orderlist}}">
+                  <view wx:if="{{item.status===('待发货')}}" class="padding-wrap">
+                    <view catchtap='redTodetail' data-id="{{index}}">
+                      <view>
+                        <text decode="{{true}}" space="{{true}}">&nbsp;&nbsp;</text>
+                        <text class="carts-price origin" style="font-size: 30rpx;color:#46a3ff;">订单状态：</text>
+                        <text class="weui-media-box" style="font-size: 30rpx;color:red;">{{item.status}}</text>
+                      </view>
+                      <text decode="{{true}}" space="{{true}}">&nbsp;&nbsp;</text>
+                      <text class="carts-price origin" style="font-size: 30rpx;color:#46a3ff;">商家：{{item.store_name}}</text>
+                      <text class="weui-media-box" style="font-size: 30rpx;color:#46a3ff;">订单号：{{item.id}}</text>
+                      <view class="operate"></view>
+                    </view>
+                    <view class="weui-form-preview__bd">
+                      <view class="weui-form-preview__item" wx:for="{{item.order_info}}" wx:for-item="itemlist" wx:for-index="goodsindex">
+                        <view class="weui-form-preview__label" style='font-size:28rpx'>{{goodsindex}}</view>
+                        <view class="weui-form-preview__value">{{itemlist}}份</view>
+                      </view>
+                    </view>
+
+                    <view class="operate">
+                      <text class="all-total">总价：￥{{item.order_total}}</text>
+                      <text class="operate-item pay" bindtap="connectstore" data-id="{{item.id}}" data-tell="{{item.store_tell}}">联系商家</text>
+                    <text class="operate-item cancel" bindtap="delorder" data-id="{{item.id}}" data-index="{{index}}">取消订单</text>
+                    </view>
+
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+      <!-- 111 -->
+    </swiper-item>
+
+    <!-- 待收货 -->
+    <swiper-item>
+      <scroll-view style="height: {{height?height+'px':'auto'}}" scroll-y="{{true}}">
+        <view class="carts">
+          <view class="weui-pull">
+            <view class="weui-pull__tips">
+              <icon type="loading" class="weui-pull__loading"></icon>
+              <!-- <text>下拉刷新</text> -->
+            </view>
+
+            <view class="weui-panel__bd">
+              <!-- 111 -->
+              <view class="weui-form-preview" style='background:#f3f3f3'>
+
+                <view wx:for="{{orderlist}}">
+                  <view wx:if="{{item.status===('待收货')}}" class="padding-wrap">
+                    <view catchtap='redTodetail' data-id="{{index}}">
+                      <view>
+                        <text decode="{{true}}" space="{{true}}">&nbsp;&nbsp;</text>
+                        <text class="carts-price origin" style="font-size: 30rpx;color:#46a3ff;">订单状态：</text>
+                        <text class="weui-media-box" style="font-size: 30rpx;color:red;">{{item.status}}</text>
+                      </view>
+                      <text decode="{{true}}" space="{{true}}">&nbsp;&nbsp;</text>
+                      <text class="carts-price origin" style="font-size: 30rpx;color:#46a3ff;">商家：{{item.store_name}}</text>
+                      <text class="weui-media-box" style="font-size: 30rpx;color:#46a3ff;">订单号：{{item.id}}</text>
+                      <view class="operate"></view>
+                    </view>
+                    <view class="weui-form-preview__bd">
+                      <view class="weui-form-preview__item" wx:for="{{item.order_info}}" wx:for-item="itemlist" wx:for-index="goodsindex">
+                        <view class="weui-form-preview__label" style='font-size:28rpx'>{{goodsindex}}</view>
+                        <view class="weui-form-preview__value">{{itemlist}}份</view>
+                      </view>
+                    </view>
+
+                    <view class="operate">
+                      <text class="all-total">总价：￥{{item.order_total}}</text>
+                     <text class="operate-item pay" bindtap="aftersale" data-id="{{item.id}}" data-storeid="{{item.store_id}}">申请售后</text>
+                    <text class="operate-item cancel" bindtap="conforder" data-id="{{item.id}}" data-index="{{index}}"> 确认收货</text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+      <!-- 111 -->
+    </swiper-item>
+
+    <!-- 待评价 -->
+    <swiper-item>
+      <scroll-view style="height: {{height?height+'px':'auto'}}" scroll-y="{{true}}">
+        <view class="carts">
+          <view class="weui-pull">
+            <view class="weui-pull__tips">
+              <icon type="loading" class="weui-pull__loading"></icon>
+              <!-- <text>下拉刷新</text> -->
+            </view>
+
+            <view class="weui-panel__bd">
+              <!-- 111 -->
+              <view class="weui-form-preview" style='background:#f3f3f3'>
+
+                <view wx:for="{{orderlist}}">
+
+                  <view wx:if="{{item.status===('待评价')}}" class="padding-wrap">
+                    <view catchtap='redTodetail' data-id="{{index}}">
+                      <text decode="{{true}}" space="{{true}}">&nbsp;&nbsp;</text>
+                      <text class="carts-price origin" style="font-size: 30rpx;color:#46a3ff;">商家：{{item.store_name}}</text>
+                      <text class="weui-media-box" style="font-size: 30rpx;color:#46a3ff;">订单号：{{item.id}}</text>
+                      <view class="operate"></view>
+
+                      <view class="weui-form-preview__bd">
+                        <view class="weui-form-preview__item" wx:for="{{item.order_info}}" wx:for-item="itemlist" wx:for-index="goodsindex">
+                          <view class="weui-form-preview__label" style='font-size:28rpx'>{{goodsindex}}</view>
+                          <view class="weui-form-preview__value">{{itemlist}}份</view>
+                        </view>
+                      </view>
+                    </view>
+                    <view class="operate">
+                      <text class="all-total">总价：￥{{item.order_total}}</text>
+                       <text class="operate-item pay" bindtap="aftersale" data-id="{{item.id}}" data-storeid="{{item.store_id}}">申请售后</text>
+                    <text class="operate-item cancel" bindtap="redTovaluation" data-id="{{item.id}}" data-index="{{index}}">立即评价</text>
+                    </view>
+
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+      <!-- 111 -->
+    </swiper-item>
+
+  </swiper>
+</view>

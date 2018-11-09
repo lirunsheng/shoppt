@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/store/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/store/css/view.css"/>
+    <link rel="stylesheet" href="__STATIC__/store/css/thinkphp-page.css"/>
+    <link rel="icon" href="__STATIC__/favicon.ico">
+    <title>管理后台</title>
+</head>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-page-header">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div class="form-box">
+                        <div class="layui-form layui-form-item">
+                            <div class="layui-inline">
+                              <label class="layui-form-label">搜索日期：</label>
+                                <div class="layui-input-inline">
+                                  <input type="text" name="date" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                                </div>
+                              <label class="layui-form-label" style="width: 150px">按订单状态查询：</label>
+                              <div class="layui-input-inline">
+                                <select name="sel" id="sel">
+                                  <option value="">请选择</option>
+                                  <optgroup label="线上订单">
+                                    <option value="待付款">待付款</option>
+                                    <option value="待发货">待发货</option>
+                                    <option value="待收货">待收货</option>
+                                    <option value="待评价">待评价</option>
+                                    <option value="售后中">售后中</option>
+                                  </optgroup>
+                                  <optgroup label="现场订单">
+                                    <option value="未完成">未完成</option>
+                                  </optgroup>
+                                  <optgroup label="已完成的订单">
+                                    <option value="已完成">已完成</option>
+                                  </optgroup>
+                                </select>
+                            </div>
+                        </div> 
+                        <button type="button" class="layui-btn layui-btn-blue" id="search">查询</button>
+                        <i class="layui-icon">&#xe67a;</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space20" id="commodity_list">
+            {volist name='order' id="vor"}
+            <div class="layui-col-sm6 layui-col-md3 layui-anim layui-anim-fadein">
+                <div class="layui-card" id="orderdetail{$vor.id}">
+                    <div class="layui-card-body chart-card">
+                        <div class="chart-header">
+                            <div class="metawrap">
+                                <div class="meta">
+                                    <span>订单编号：{$vor.id}</span>
+                                    <input type="hidden" name="order_id" class="order_id" value="{$vor.id}">
+                                </div>
+                                <div class="total" >{$vor.status}</div>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="contentwrap">
+                                订单总价：￥{$vor.order_total}
+                            </div>
+                        </div>
+                        <div class="chart-footer">
+                            <div class="field">
+                                {php}if($vor['isonline']==0)echo "创建订单方式：现场支付";else echo "创建订单方式：线上支付";{/php}
+                            </div>
+                            <div class="field">
+                                <span>添加时间：</span>
+                                <span>{$vor.addtime|date="Y-m-d H:i",###}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/volist}
+            <div class="layui-form layui-form-item">
+                {$page}
+            </div>
+            </div>
+
+            <div style="display: none" id="table">
+                <table id="tableord" class="layui-table">
+                    <thead><tr><th>名字</th><th>数量</th><th>单价</th></tr></thead>
+                </table>
+            </div>
+            <div style="display: none" id="rate">
+                <table id="tablerate" class="layui-table">
+                    <thead><tr><th>类型</th><th>评分</th></tr></thead>
+                </table>
+            </div>
+            <div style="display: none" id="address">
+                <table id="tableaddress" class="layui-table">
+                    
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script src="__STATIC__/store/layui.js"></script>
+    <script src="__STATIC__/store/layui.all.js"></script>
+    <script type="text/javascript" src="__STATIC__/store/jquery.min.js"></script>
+    <script>
+    var element = layui.element;
+    var form = layui.form;
+    var laydate=layui.laydate;
+    var rate=layui.rate;
+    
+
+    laydate.render({
+        elem: '#date'
+    });
+
+    $(".order_id").each(function(){
+        var order_id=$(this).val();
+        var order_total=$(this).parents().nextAll(".chart-body").html();
+        var status;
+        var order_feedback;
+        var order_feedback_type;
+        var tbrate;
+        var addtime;
+        var address;
+        var addressinfo;
+        var presend;
+
+        function timestampToTime(timestamp) {
+            var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+            var Y = date.getFullYear() + '-';
+            var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+            var D = date.getDate() + ' ';
+            var h = date.getHours() + ':';
+            var m = date.getMinutes() + ':';
+            var s = date.getSeconds();
+            return Y+M+D+h+m+s;
+        }
+        var isonline;
+        $("#orderdetail"+$(this).val()).click(function(){
+            $.post('/store/manage/selectorder',{'order_id':order_id},function(ret){
+                var obj=JSON.parse(ret['order_info']);
+                console.log(obj);
+                var obj2=ret['0'];
+                $.each(obj,function(key,val){
+                    $("#tableord").append("<tr id='tr"+key+"' class='tr'>"
+                    +"<td>"+key+"</td>"
+                    +"<td>"+val+"</td>"
+                    +"</tr>");
+                });
+                $.each(obj2,function(key,val){
+                    $("#tr"+key).append("<td>"+val+"</td>"
+                    +"</tr>");
+                });
+                isonline=ret['isonline'];
+                if(isonline==0){
+                    isonline="现场支付";
+                }
+                else if(isonline=="1"){
+                    if(ret['order_address']==""){
+                        addressinfo="收货信息有误<br>";
+                    }
+                    else{
+                        address=JSON.parse(ret['order_address']);
+                        console.log(address);
+                        $("#tableaddress").append("<thead class='tr'><tr class='tr'><th>收货人</th><th>电话</th></tr></thead>"
+                            +"<tr class='tr'><td>"+address['name']+"</td><td>"+address['tell']+"</td></tr>"
+                            +"<thead class='tr'><tr class='tr'><th>收货地址</th><th>门牌号</th></tr></thead>"
+                            +"<tr class='tr'><td>"+address['area']+"</td><td>"+address['door']+"</td></tr>");
+                        addressinfo="收货信息：<br>"+$("#address").html();
+                    }
+                    presend=ret['order_time'];
+                    if(presend==""){
+                        presend="立刻送达";
+                    }
+                    order_feedback=ret['feedback'];
+                    if(order_feedback==""){
+                        order_feedback="无";
+                    }
+                    order_feedback_type=JSON.parse(ret['feedbacktype']);
+                    if(!$.isArray(order_feedback_type)){
+                        tbrate="无评分";
+                    }
+                    else{
+                        $("#tablerate").append("<tr class='tr'><td>描述相符</td><td><div id='rate1'></div></td></tr>"
+                            +"<tr class='tr'><td>发货速度</td><td><div id='rate2'></div></td></tr>"
+                            +"<tr class='tr'><td>服务态度</td><td><div id='rate3'></div></td></tr>");
+                        rate.render({
+                            elem:'#rate1',
+                            value:order_feedback_type[0],
+                            readonly:true,
+                            theme: '#FF8000',
+                            text:true
+                        });
+                        rate.render({
+                            elem:'#rate2',
+                            value:order_feedback_type[1],
+                            readonly:true,
+                            theme: '#FF8000',
+                            text:true
+                        });
+                        rate.render({
+                            elem:'#rate3',
+                            value:order_feedback_type[2],
+                            readonly:true,
+                            theme: '#FF8000',
+                            text:true
+                        });
+                        tbrate="订单评分：<br>"+$("#rate").html()
+                        +"订单反馈："+order_feedback;
+                    }
+                    isonline="线上支付<br>"
+                    +"预计到达时间：<p style='color:red'>"+presend+"</p>"
+                    +addressinfo
+                    +tbrate;
+                }
+
+                addtime=ret['addtime'];
+                status=ret['status'];
+
+                if(status=="售后中"){
+                    status="售后中，处理完毕后请点击“已完成”<br><a href='/store/manage/afterorder?id="+order_id+"' class='layui-btn layui-btn-blue' type='button' id='afterorder'>已完成</a>";
+                }
+            });
+            setTimeout(function(){
+                layer.open({
+                    title:"详细信息",
+                    content:"订单编号："+order_id+"<br>"
+                    +"订单状态："+status+"<br>"
+                    +"订单信息：<br>"+$("#table").html()
+                    +order_total
+                    +"创建订单方式："+isonline+"<br>"
+                    +"添加时间："+timestampToTime(addtime)
+                    ,
+                    btn:false,
+                    shadeClose:true,
+                    area:'480px',
+                    end:function(){
+                        $("tr").remove('.tr');
+                    },
+                });
+                
+            },800); 
+
+            //end
+        });
+    });
+
+    $("#search").click(function(){
+        var sel=$("#sel").val();
+        var date=$("#date").val()
+        $.post("/store/manage/searchorder",{'sel':sel,'date':date},function(ret){
+            console.log(ret);
+            $("#commodity_list").empty();
+            $("#commodity_list").append(ret);
+        });
+    });
+    
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{
+	"pages": [
+    "page/login/login",
+    "page/index/index",
+    "page/index/search",
+		"page/shop/shop",
+		"page/mine/mine",
+    "page/order/order",
+    "page/address/downOrder/downOrder",
+    "page/address/chooseAddre/chooseAddre",
+    "page/address/newAddre/newAddre",
+    "page/address/modifyAddre/modifyAddre",
+    "page/bindphone/bindphone",
+    "page/valuation/valuation",
+    "page/valdetail/valdetail",
+    "page/aftersale/aftersale",
+    "page/myvaluation/myvaluation",
+    "page/myvaludetail/myvaludetail",
+    "page/storeenter/storeenter",
+    "page/address/chooseAddreSY/chooseAddreSY",
+    "page/address/newAddreSY/newAddreSY",
+    "page/address/modifyAddreSY/modifyAddreSY",
+    "page/map/map"
+	],
+	"window": {
+		"navigationBarBackgroundColor": "#46a3ff",
+		"navigationBarTextStyle": "white",
+		"backgroundColor": "#efefef",
+		"backgroundTextStyle": "dark",
+		"navigationBarTitleText": "便利店平台"
+	},
+	"tabBar": {
+		"color": "#6c6c6c",
+		"selectedColor": "#0080ff",
+		"borderStyle": "#6c6c6c",
+		"backgroundColor": "#fcfcfc",
+		"list": [
+			{
+				"pagePath": "page/index/index",
+				"iconPath": "imgs/tabBar/home_2.png",
+				"selectedIconPath": "imgs/tabBar/home_1.png",
+				"text": "首页"
+			},{
+        "pagePath": "page/order/order",
+        "iconPath": "imgs/tabBar/order_2.png",
+        "selectedIconPath": "imgs/tabBar/order_1.png",
+        "text": "订单"
+      },{
+				"pagePath": "page/mine/mine",
+				"iconPath": "imgs/tabBar/mine_2.png",
+				"selectedIconPath": "imgs/tabBar/mine_1.png",
+				"text": "我的"
+			}
+		]
+	},
+	"networkTimeout": {
+		"request": 10000,
+		"connectSocket": 10000,
+		"uploadFile": 10000,
+		"downloadFile": 10000
+	},
+	"debug": true
+}

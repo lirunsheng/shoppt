@@ -1,0 +1,17 @@
+<view class="container">
+	<view class="header">
+		<image class="avatar" src="{{userInfo.avatarUrl}}" />
+		<view class="nickname">{{userInfo.nickName}}</view>
+	</view>
+	<view class="section">
+		<navigator url="/page/myvaluation/myvaluation" class="line judgement">我的评价</navigator>
+		<view class="line judgement" bindtap='redToBindPhone'>绑定手机</view>
+		<view class="line judgement" bindtap='redToAdd'>我的地址</view>
+	</view>
+	<view class="section">
+		<navigator url='/page/storeenter/storeenter' class="line judgement">商家入驻</navigator>
+	</view>
+	<view class="section">
+		<view class="line judgement" bindtap='connetsale'>联系客服<text class="tl">9:00 - 23:00</text></view>
+	</view>
+</view>

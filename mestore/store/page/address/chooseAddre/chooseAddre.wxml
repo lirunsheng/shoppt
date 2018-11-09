@@ -1,0 +1,16 @@
+<view class="item" wx:for="{{li}}" bindtap="todownOrder"  data-index="{{index}}" data-tell="{{item.tell}}" data-area="{{item.area}}" data-door="{{item.door}}" data-name="{{item.name}}" >
+  <image src="{{item.image}}" mode="widthFix" />
+  <view class="info">
+    <text decode='{{true}}' space='{{true}}'>用户名：{{item.name}}&nbsp;&nbsp;&nbsp;&nbsp;手机号：{{item.tell}}</text>
+    <text>地址：{{item.area}} {{item.door}}</text>
+  </view>
+  <view class="modify" catchtap="toModifyAddre" data-index="{{index}}" data-id="{{item.id}}" data-name="{{item.name}}" data-tell="{{item.tell}}" data-area="{{item.area}}" data-door="{{item.door}}">
+    <image src="/imgs/address/modify.png" mode="widthFix" bindtap="detete" />
+  </view>
+</view>
+
+<view class="add" bindtap="addAddre">
+  <image class="left" src="/imgs/address/6.png" mode="widthFix" />
+  <view class="text">新增个人地址</view>
+  <image class="right" src="/imgs/address/right.png" mode="widthFix" />
+</view>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="__STATIC__/store/assets/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/store/assets/css/view.css"/>
+    <title></title>
+</head>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-row layui-col-space20">
+            {volist name='order' id="vor"}
+            <div class="layui-col-sm6 layui-col-md3 layui-anim layui-anim-upbit">
+                <div class="layui-card">
+                    <div class="layui-card-body chart-card">
+                        <div class="chart-header">
+                            <div class="metawrap">
+                                <div class="meta">
+                                    <span>订单编号：{$vor.id}</span>
+                                </div>
+                                <div class="total">{$vor.status}</div>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="contentwrap">
+                                总价格：￥{$vor.order_total}
+                            </div>
+                        </div>
+                        <div class="chart-footer">
+                            <div class="field">
+                                <span>用户ID：</span>
+                                <span>{$vor.user_id}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/volist}
+            
+            <div class="layui-col-sm12 layui-col-md12 layui-anim layui-anim-upbit">
+                <div class="layui-card">
+                    <div class="layui-tab layui-tab-brief">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">现场买单</li>
+                            <li>所有订单</li>
+                        </ul>
+                        
+                        <div class="layui-tab-content">
+                            <div class="layui-tab-item layui-show">
+                                <div class="layui-form-item">
+                                  <label class="layui-form-label">输入商品</label>
+                                  <div class="layui-input-inline">
+                                    <input type="text" name="barcode" id="barcode" required lay-verify="required" placeholder="请输入商品条形码" class="layui-input" oninput="value=value.replace(/[^\d]/g,'')" maxlength="13">
+                                  </div>
+                                  <button onclick="select()" class="layui-btn layui-btn-radius layui-btn-normal">添加</button>
+                                </div>
+                                <form action="/store/console/order" method="post" enctype="multipart/form-data">
+                                <table class="layui-table"  lay-even lay-skin="nob">
+                                <thead>
+                                  <tr>
+                                    <th lay-data="{field:'id', width:80, sort: true}">ID</th>
+                                    <th lay-data="{field:'name', width:220}">商品名称</th>
+                                    <th lay-data="{field:'style', width:100}">商品类型</th>
+                                    <th lay-data="{field:'barcode'}">商品条形码</th>
+                                    <th lay-data="{field:'number', width:100}">数量</th>
+                                    <th lay-data="{field:'price', width:100}">单价</th>
+                                    <th lay-data="{field:'totalprice', width:100}">总价</th>
+                                    <th lay-data="{field:'operate'}">操作</th>
+                                  </tr>
+                                </thead>
+                                
+                                <tbody id="edit">
+                                  
+                                </tbody>
+                              </table>
+                              <div>
+                                  <textarea name="info" id="info" style="display: none"></textarea>
+                                  <textarea name="delinfo" id="delinfo" style="display: none;"></textarea>
+                              </div>
+                              <div style="display: inline-block;width: 100%;">
+                                <input type="submit" name="submit" class="layui-btn layui-btn-radius layui-btn-normal" style="float: right;">
+                                <input style="float: right;border: 0;font-size: 30px;width: 100px;" id="total" name="total" readonly="true" value="0">
+                                <h1 style="float: right;">￥</h1>
+                                </div>
+                                </form>
+                              </div>
+                            </div>
+                            <div class="layui-tab-item">
+                                ddd
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="__STATIC__/store/assets/layui.all.js"></script>
+    <script type="text/javascript" src="__STATIC__/store/assets/jquery.min.js"></script>
+    <script>
+    var element = layui.element;
+    var total=0;
+    var number=0;
+    var info;
+    var gnumber=0;
+    $("#barcode").focus();
+    
+    $("#barcode").bind('input propertychange',function(){
+        if($("#barcode").val().length>=13){
+            select();
+        }   
+    });
+    
+    function select(){
+        var barcode = $('#barcode').val();
+        $.post('/store/console/select',{'barcode' : barcode},function(ret){
+            console.log(ret);
+            if(ret=="\r\n\r\n\r\n"||ret=="\r\n\r\n"){
+                layer.msg("商品不存在！");
+            }
+            else{
+                if(barcode==$("tr#tr"+barcode).children("#barcode").text()){
+                    $("tr#tr"+barcode).children("td#number").children("#num").val(Number($("tr#tr"+barcode).children("td#number").children("#num").val())+1);
+                    $("tr#tr"+barcode).children("td."+barcode).html(Number($("tr#tr"+barcode).children("td#number").children("#num").val())*Number($("tr#tr"+barcode).children("td#price").text()));
+                    total=total+Number($("tr#tr"+barcode).children("td#price").html());
+                    $("#total").val(total);
+                    gnumber=Number($("tr#tr"+barcode).children("td#number").children("#num").val());
+                    // info=$("tr#tr"+barcode).children("#name").html();
+                    // $("#info").append(info+"\n");
+                }
+                else{
+                    number++;
+                    gnumber=1;
+                    $("#edit").append("<tr id='tr"+barcode+"'><td name='id' id='"+number+"''>"+number+"</td>"+ret+"</tr>");
+                    total=total+Number($("tr").children("td."+barcode).html());
+                    $("#total").val(total);
+                    info=$("tr").children("#"+number).next("#name").html();
+                    $("#info").append(info+"\n");
+                }  
+            }
+            $("#barcode").val("");
+        });
+        $("#barcode").focus();
+    }
+
+    function temp(bar){
+        gnumber=Number($("tr#tr"+bar).children("td#number").children("#num").val());
+    }
+
+    function gnum(bar){
+        total=total+(((Number($("tr#tr"+bar).children("td#number").children("#num").val()))-gnumber)*Number($("tr#tr"+bar).children("td#price").text()));
+        $("tr#tr"+bar).children("td."+bar).html(Number($("tr#tr"+bar).children("td#number").children("#num").val())*Number($("tr#tr"+bar).children("td#price").text()));
+        gnumber=Number($("tr#tr"+bar).children("td#number").children("#num").val());
+        $("#total").val(total);
+        $("#barcode").focus();
+    }
+
+    function del(bar){
+        $.post('/store/console/select',{'barcode' : bar},function(ret){
+            if($("tr#tr"+bar).children("#number").children("#num").val()==1){
+                total=total-Number($("tr#tr"+bar).children("td."+bar).html());
+                if(isNaN(total)==true){
+                    total=0;
+                }
+                $("#total").val(total);
+                info=$("tr#tr"+bar).children("#name").html()
+                $("#delinfo").append(info+"\n");
+
+                $("td."+bar).parents('#tr'+bar).remove('tr');
+            }
+            else{
+                total=total-Number($("tr#tr"+bar).children("#price").html());
+                $("tr#tr"+bar).children("#number").children("#num").val(Number($("tr#tr"+bar).children("#number").children("#num").val())-1);
+                $("tr#tr"+bar).children("td."+bar).html(Number($("tr#tr"+bar).children("#number").children("#num").val())*Number($("tr#tr"+bar).children("#price").text()));
+                $("#total").val(total);
+                // info=$("tr#tr"+bar).children("#name").html()
+                // $("#delinfo").append(info+"\n");
+            }
+        });
+        $("#barcode").focus();
+    }
+    </script>
+</body>
+</html>

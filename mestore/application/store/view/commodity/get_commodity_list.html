@@ -1,0 +1,52 @@
+{volist name='commodity' id="vor"}
+<div class="layui-col-sm6 layui-col-md3 layui-anim layui-anim-fadein">
+    <div class="layui-card" id="commodity{$vor.id}">
+        <div class="layui-card-body chart-card">
+            <div class="chart-header">
+                <div class="metawrap">
+                    <div class="meta">
+                        <span>商品条形码：{$vor.barcode}</span>
+                        <input type="hidden" name="commodity_id" class="commodity_id" value="{$vor.id}">
+                    </div>
+                    <div style="white-space: nowrap;font-size: 20px" >{$vor.goods_name}</div>
+                </div>
+            </div>
+            <div class="chart-body">
+                <div class="contentwrap">
+                    分类：{$vor.goods_style}
+                </div>
+                <div class="contentwrap">
+                    单价：￥{$vor.goods_price}
+                </div>
+            </div>
+            <div class="chart-footer">
+                <div class="field">
+                    <span>库存：</span>
+                    <span>{$vor.goods_stork}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/volist}
+<div class="layui-form layui-form-item">
+    {$page1}
+</div>
+
+<script src="__STATIC__/store/layui.all.js"></script>
+<script type="text/javascript">
+    $(".commodity_id").each(function(){
+        var commodity_id=$(this).val();
+        $("#commodity"+$(this).val()).click(function(){
+            $.post('/store/commodity/detail',{'commodity_id':commodity_id},function(ret){
+                layer.open({
+                    title:"商品修改",
+                    content:""+ret
+                    ,
+                    btn:false,
+                    area:['640px','480px'],
+                });
+            });
+        });
+      });
+</script>

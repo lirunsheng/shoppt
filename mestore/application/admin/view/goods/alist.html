@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="__STATIC__/store/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/store/css/view.css"/>
+    <title></title>
+</head>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-row">
+            <div class="layui-card layui-anim layui-anim-upbit">
+                <div class="layui-card-header">商品审核</div>
+                <form class="layui-form layui-card-body"  enctype="multipart/form-data" method="post">
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">商品条形码</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="barcode" id="barcode" required  lay-verify="required" autocomplete="off" class="layui-input" readonly="true" value="{$result.barcode}"><small>条形码应为13位</small>
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">商品名称</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="goods_name" required  lay-verify="required"  autocomplete="off" class="layui-input" readonly="true" value="{$result.goods_name}">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">商品类型</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="goods_style" id="goods_style" required  lay-verify="required" readonly="true" autocomplete="off" class="layui-input" value="{$result.goods_style}">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">商品价格</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="goods_price" id="goods_price" required  lay-verify="required" readonly="true" autocomplete="off" class="layui-input" value="{$result.goods_price}">
+                    </div>
+                  </div>
+
+
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店铺ID</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="store_id" id="store_id" required  lay-verify="required" readonly="true"  autocomplete="off" class="layui-input" value="{$result.store_id}">
+                    </div>
+                  </div>
+
+
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">商品图片</label>
+                    <div class="layui-input-inline">           
+                      <img src="{$result.goods_file}" style="width: 200px;" />
+                    </div>
+                  </div>
+
+                  <div class="layui-form-item">
+                    <div class="layui-input-block">
+                      <a  href="/admin/goods/insert?id={$result.id}" type="button" data-method="offset" data-type="auto" class="layui-btn layui-btn-normal" id="insert">通过审核</a>
+                      <a href="/admin/goods/delete?id={$result.id}&store_id={$result.store_id}&goods_name={$result.goods_name}" type="button" data-method="offset" data-type="auto" class="layui-btn layui-btn-normal" id="test">下架商品</a>
+                    </div>
+                  </div>
+                </form>  
+            </div>
+        </div>
+    </div>
+    <script src="__STATIC__/store/layui.all.js"></script>
+    <script type="text/javascript" src="__STATIC__/store/jquery.min.js"></script>
+    
+</body>
+</html>

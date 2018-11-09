@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="__STATIC__/store/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/store/css/view.css"/>
+    <title></title>
+</head>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-row">
+            <div class="layui-card layui-anim layui-anim-upbit">
+                <div class="layui-card-header">商家信息修改</div>
+                <form class="layui-form layui-card-body" action="/store/manage/update" method="post">
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店铺名</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="store_name" id="store_name" required  lay-verify="required" autocomplete="off" disabled="disabled" class="layui-input" value="{$store.store_name}">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店主名</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="owner_name" required  lay-verify="required"  autocomplete="off" class="layui-input" disabled="disabled" value="{$store.owner_name}">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">身份证</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="owner_ID" id="owner_ID" required  lay-verify="required" disabled="disabled" autocomplete="off" class="layui-input" value="{$store.owner_ID}">
+                    </div>
+                  </div>
+                  
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">电话号码</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="store_tell" id="tell" required  lay-verify="required"  autocomplete="off" class="layui-input" value="{$store.store_tell}">
+                    </div>
+                  </div>
+                  
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店铺描述</label>
+                    <div class="layui-input-block">
+                      <textarea name="desc" class="layui-textarea">{$store.description}</textarea>
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店铺地址</label>
+                    <div class="layui-input-block">
+                      <input type="text" name="store_address" id="store_address" required  lay-verify="required" autocomplete="off" class="layui-input" value="{$store.store_address}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux" id="addressinfo">请填写详细，输入正确后系统会自动获取经纬度</div>
+                  </div>
+                  <div class="layui-form-item">
+                    <div class="layui-input-block">
+                      <button type="submit" data-method="offset" data-type="auto" class="layui-btn layui-btn-normal" id="update">修改</button>
+                      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                  </div>
+                </form>  
+            </div>
+        </div>
+    </div>
+    <script src="__STATIC__/store/layui.all.js"></script>
+    <script type="text/javascript" src="__STATIC__/store/jquery.min.js"></script>
+    <script>
+      // var form = layui.form
+      //   ,layer = layui.layer;
+
+      //   $("#update").click(function(){
+      //     layer.open({
+      //       title:"确认",
+      //       content:"确认修改后，等待管理员的审核通过后才能显示更新信息，确认继续吗？",
+      //       shade:0.8,
+      //       btn:['确认修改','我再想想'],
+      //       yes:function(){
+      //         $("form").submit();
+      //       }
+      //     });
+      //   });
+
+        $("#store_address").change(function(){
+          var address=$("#store_address").val();
+          $.post('/store/manage/getaddress',{'store_address':address},function(res){
+            $("#addressinfo").html(address+" "+res);
+          })
+        });
+    </script>
+</body>
+</html>

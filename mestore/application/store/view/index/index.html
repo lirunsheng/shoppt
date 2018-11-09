@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/store/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/store/css/admin.css">
+    <link rel="icon" href="favicon.ico">
+    <title>{$store_id.store_name}</title>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header custom-header">
+            
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item slide-sidebar" lay-unselect>
+                    <a href="javascript:;" class="icon-font"><i class="ai ai-menufold"></i></a>
+                </li>
+            </ul>
+
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a id="message" data-type="tabAdd">消息</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">{$store_id.store_name}</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">帮助中心</a></dd>
+                        <dd><a href="\store\common\destroy">退出</a></dd>
+                    </dl>
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="layui-side custom-admin">
+            <div class="layui-side-scroll">
+
+                <div class="custom-logo">
+                    <img src="{$store_id.store_logo}" alt="" id="uplogo" />
+                    <input type="hidden" name="uploadlogo" id="uploadlogo" value="{$store_id.store_logo}">
+                    <h1>{$store_id.store_name}</h1>
+                </div>
+                <ul id="Nav" class="layui-nav layui-nav-tree">
+                    <li class="layui-nav-item">
+                        <a href="javascript:;" id="a">
+                            <i class="layui-icon">&#xe609;</span></i>
+                            <em>主页</em>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="/store/console/index">控制台</a></dd>
+                            <dd id="span"><a href="/store/console/send">待发货</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
+                            <i class="layui-icon">&#xe68e;</i>
+                            <em>店铺</em>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="/store/manage/index">店铺信息</a></dd>
+                            <dd><a href="/store/manage/managepic">店铺图片</a></dd>
+                            <dd><a href="/store/manage/manageorder">订单管理</a></dd>
+                            <dd><a href="/store/manage/managepwd">修改密码</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
+                            <i class="layui-icon">&#xe600;</i>
+                            <em>商品</em>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="/store/commodity/addcommodity">添加商品</a></dd>
+                            <dd><a href="/store/commodity/commodity">商品管理</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
+                            <i class="layui-icon">&#xe62c;</i>
+                            <em>统计</em>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="/store/statistics">统计</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="layui-body">
+             <div class="layui-tab app-container" lay-allowClose="true" lay-filter="tabs">
+                <ul id="appTabs" class="layui-tab-title custom-tab"></ul>
+                <div id="appTabPage" class="layui-tab-content"></div>
+            </div>
+        </div>
+
+        <div class="mobile-mask"></div>
+    </div>
+    <script type="text/javascript" src="__STATIC__/store/jquery.min.js"></script>
+    <script src="__STATIC__/store/layui.js"></script>
+    <script src="__STATIC__/store/layui.all.js"></script>
+    
+    <script src="__STATIC__/store/login.js" data-main="login"></script>
+    <script src="__STATIC__/store/home.js" data-main="home"></script>
+    <script type="text/javascript">
+        var layer=layui.layer;
+        $("#message").click(function(){
+            layui.use('element', function(){
+                var element = layui.element; 
+                element.tabAdd('tabs',{
+                    title: '消息'
+                    ,content: '<iframe src="/store/message"></iframe>' //支持传入html
+                    ,id: '/store/message'
+                });
+                element.tabChange('tabs','/store/message');
+            });
+        });
+
+        $("#uplogo").click(function(){
+            var c=$("#uploadlogo").val();
+            layer.open({
+                title:"修改店铺头像",
+                content:"<img src='"+c+"' id='uplogo1' style='width:400px' /><br><br>"
+                +"<button type='button' id='uploadlogoimg' class='layui-btn layui-btn-normal'>更换头像</button> 更换头像后系统会自动保存",
+                btn:false,
+                area:'440px'
+            });  
+            layui.use('upload',function(){
+                var upload=layui.upload;
+                upload.render({
+                    elem:"#uploadlogoimg",
+                    url:"/store/index/uplogo",
+                    done:function(res){
+                        $("#uplogo").attr('src',res);
+                        $("#uploadlogo").val(res);
+                        $("#uplogo1").attr('src',res);
+                    },
+                    accept:"images"
+                });
+            });
+        });
+            
+        
+
+        setInterval(function(){
+            $.post('/store/index/listenorder',{},function(ret){
+                if(ret>0){
+                    $("#a").append('<span class="layui-badge-dot" id="listen">');
+                    $("#span").append('<span class="layui-badge" id="listen2">'+ret+'</span>');
+                }
+                else if(ret==0){
+                    $('#listen').remove();
+                    $('#listen2').remove();
+                }
+            });
+        },5000);
+
+         setInterval(function(){
+            $.post('/store/index/listenmessage',{},function(ret2){
+                if(ret2>0){
+                    $("#message").append('<span class="layui-badge" id="msg">'+ret2+'</span>');
+                    
+                }
+                else if(ret2==0){
+                    $('#msg').remove();
+                }
+            });
+        },5000);
+
+    </script>
+</body>
+</html>

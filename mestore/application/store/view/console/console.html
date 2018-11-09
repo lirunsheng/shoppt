@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="__STATIC__/store/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/store/css/view.css"/>
+    <title></title>
+</head>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-row layui-col-space20">
+            {volist name='order' id="vor"}
+            <div class="layui-col-sm6 layui-col-md3 layui-anim layui-anim-fadein">
+                <div class="layui-card" id="orderdetail{$vor.id}">
+                    <div class="layui-card-body chart-card">
+                        <div class="chart-header">
+                            <div class="metawrap">
+                                <div class="meta">
+                                    <span>订单编号：{$vor.id}</span>
+                                    <input type="hidden" name="order_id" class="order_id" value="{$vor.id}">
+                                </div>
+                                <div class="total" >{$vor.status}</div>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="contentwrap">
+                                订单总价：￥{$vor.order_total}
+                            </div>
+                        </div>
+                        <div class="chart-footer">
+                            <div class="field">
+                                {php}if($vor['isonline']==0)echo "创建订单方式：现场支付";else echo "创建订单方式：线上支付";{/php}
+                            </div>
+                            <div class="field">
+                                <span>添加时间：</span>
+                                <span>{$vor.addtime|date="Y-m-d H:i",###}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/volist}
+            
+            <div style="display: none" id="table">
+                <table id="tableord" class="layui-table">
+                    <tr><th>名字</th><th>数量</th><th>单价</th></tr>
+                </table>
+            </div>
+            <div style="display: none" id="rate">
+                <table id="tablerate" class="layui-table">
+                    <thead><tr><th>类型</th><th>评分</th></tr></thead>
+                </table>
+            </div>
+            <div style="display: none" id="address">
+                <table id="tableaddress" class="layui-table">
+                    
+                </table>
+            </div>
+
+            <div class="layui-col-sm12 layui-col-md12 layui-anim layui-anim-upbit">
+                <div class="layui-card">
+                    <div class="layui-tab layui-tab-brief">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">现场买单</li>
+                        </ul>
+                        
+                        <div class="layui-tab-content">
+                            <div class="layui-tab-item layui-show">
+                                <div class="layui-form-item">
+                                  <label class="layui-form-label">输入商品</label>
+                                  <div class="layui-input-inline">
+                                    <input type="text" name="barcode" id="barcode" required lay-verify="required" placeholder="请输入商品条形码" class="layui-input" oninput="value=value.replace(/[^\d]/g,'')" maxlength="13">
+                                  </div>
+                                  <button onclick="select()" class="layui-btn layui-btn-radius layui-btn-normal">添加</button>
+                                </div>
+                                <form action="/store/console/order" method="post" enctype="multipart/form-data">
+                                <table class="layui-table"  lay-even lay-skin="nob">
+                                <thead>
+                                  <tr>
+                                    <th lay-data="{field:'id', width:80, sort: true}">ID</th>
+                                    <th lay-data="{field:'name', width:220}">商品名称</th>
+                                    <th lay-data="{field:'style', width:100}">商品类型</th>
+                                    <th lay-data="{field:'barcode'}">商品条形码</th>
+                                    <th lay-data="{field:'number', width:100}">数量</th>
+                                    <th lay-data="{field:'price', width:100}">单价</th>
+                                    <th lay-data="{field:'totalprice', width:100}">总价</th>
+                                    <th lay-data="{field:'operate'}">操作</th>
+                                  </tr>
+                                </thead>
+                                
+                                <tbody id="edit">
+                                  
+                                </tbody>
+                              </table>
+                              <div style="display: none;">
+                                  <textarea name="info" id="info" ></textarea>
+                                  <textarea name="delinfo" id="delinfo" ></textarea>
+                                  <table class="layui-table" id="temptable">  
+                                  </table>
+                              </div>
+                              <div style="display: inline-block;width: 100%;">
+                                <input type="submit" name="submit" class="layui-btn layui-btn-radius layui-btn-normal" style="float: right;">
+                                <input style="float: right;border: 0;font-size: 30px;width: 100px;" id="total" name="total" readonly="true" value="0">
+                                <h1 style="float: right;">￥</h1>
+                                </div>
+                                </form>
+                              </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="__STATIC__/store/jquery.min.js"></script>
+    <script src="__STATIC__/store/layui.js"></script>
+    <script src="__STATIC__/store/layui.all.js"></script>
+    
+    <script>
+    var element = layui.element;
+    var rate=layui.rate;
+    var total=0;
+    var number=0;
+    var info;
+    var gnumber=0;
+    $("#barcode").focus();
+    
+    $("#barcode").bind('input propertychange',function(){
+        if($("#barcode").val().length>=13){
+            select();
+        }   
+    });
+    
+    function select(){
+        var barcode = $('#barcode').val();
+        $.post('/store/console/select',{'barcode' : barcode},function(ret){
+            console.log(ret);
+            if(ret=="\r\n\r\n\r\n"||ret=="\r\n\r\n"){
+                layer.msg("商品不存在！");
+            }
+            else{
+                if(barcode==$("tr#tr"+barcode).children("#barcode").text()){
+                    $("tr#tr"+barcode).children("td#number").children("#num").val(Number($("tr#tr"+barcode).children("td#number").children("#num").val())+1);  //扫码后数量+1
+                    $("tr#tr"+barcode).children("td."+barcode).html(Number($("tr#tr"+barcode).children("td#number").children("#num").val())*Number($("tr#tr"+barcode).children("td#price").text()));  //数量与单价相乘
+                    total=total+Number($("tr#tr"+barcode).children("td#price").html());  //总价相加
+                    $("#total").val(total);  //输出总价
+                    gnumber=Number($("tr#tr"+barcode).children("td#number").children("#num").val());  //存放数量值
+                    
+                    // info=$("tr#tr"+barcode).children("#name").html();
+                    // $("#info").append(info+"\n");
+                }
+                else{
+                    number++;   //扫码后数量+1
+                    gnumber=1; //存放数量值
+                    $("#edit").append("<tr id='tr"+barcode+"'><td name='id' id='"+number+"''>"+number+"</td>"+ret+"</tr>");  //添加数据
+                    total=total+Number($("tr").children("td."+barcode).html());  //总价相加
+                    $("#total").val(total);   //输出总价
+                    info=$("tr#tr"+barcode).children("#name").html();  //添加商品名字
+                    $("#info").append(info+"\n");
+                    
+                }  
+            }
+            $("#barcode").val("");
+        });
+        $("#barcode").focus();
+    }
+
+    function temp(bar){  //点击数目框后直接读取该框里的数字，方便处理数据
+        gnumber=Number($("tr#tr"+bar).children("td#number").children("#num").val());
+    }
+
+    function gnum(bar){   //修改数目
+        total=total+(((Number($("tr#tr"+bar).children("td#number").children("#num").val()))-gnumber)*Number($("tr#tr"+bar).children("td#price").text()));
+        $("tr#tr"+bar).children("td."+bar).html(Number($("tr#tr"+bar).children("td#number").children("#num").val())*Number($("tr#tr"+bar).children("td#price").text()));
+        gnumber=Number($("tr#tr"+bar).children("td#number").children("#num").val());
+        
+        $("#total").val(total);
+        $("#barcode").focus();
+    }
+
+    function del(bar){  //删除操作
+        $.post('/store/console/select',{'barcode' : bar},function(ret){
+            if($("tr#tr"+bar).children("#number").children("#num").val()==1){
+                total=total-Number($("tr#tr"+bar).children("td."+bar).html());
+                if(isNaN(total)==true){
+                    total=0;
+                }
+                $("#total").val(total);
+                info=$("tr#tr"+bar).children("#name").html();
+                $("#delinfo").append(info+"\n");
+                $("td."+bar).parents('#tr'+bar).remove('tr');
+                
+            }
+            else{
+                total=total-Number($("tr#tr"+bar).children("#price").html());
+                $("tr#tr"+bar).children("#number").children("#num").val(Number($("tr#tr"+bar).children("#number").children("#num").val())-1);
+                $("tr#tr"+bar).children("td."+bar).html(Number($("tr#tr"+bar).children("#number").children("#num").val())*Number($("tr#tr"+bar).children("#price").text()));
+                $("#total").val(total);
+                gnumber=Number($("tr#tr"+bar).children("td#number").children("#num").val());
+                
+                // info=$("tr#tr"+bar).children("#name").html()
+                // $("#delinfo").append(info+"\n");
+            }
+        });
+        $("#barcode").focus();
+    }
+
+
+    $(".order_id").each(function(){
+        var order_id=$(this).val();
+        var order_total=$(this).parents().nextAll(".chart-body").html();
+        var order_status=$(this).parent().next(".total").html();
+        var order_feedback;
+        var order_feedback_type;
+        var status;
+        var address;
+        var addtime;
+        var remark;
+        var presend;
+        
+        function timestampToTime(timestamp) {
+            var date = new Date(timestamp * 1000);
+            var Y = date.getFullYear() + '-';
+            var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+            var D = date.getDate() + ' ';
+            var h = date.getHours() + ':';
+            var m = date.getMinutes() + ':';
+            var s = date.getSeconds();
+            return Y+M+D+h+m+s;
+        }
+        var isonline;
+        $("#orderdetail"+$(this).val()).click(function(){
+            $.post('/store/console/selectorder',{'order_id':order_id},function(ret){
+                var obj=JSON.parse(ret['order_info']);
+                var obj2=ret['0'];
+                $.each(obj,function(key,val){
+                    $("#tableord").append("<tr id='tr"+key+"' class='tr'>"
+                    +"<td>"+key+"</td>"
+                    +"<td>"+val+"</td>"
+                    +"</tr>");
+                });
+                $.each(obj2,function(key,val){
+                    $("#tr"+key).append("<td>"+val+"</td>"
+                    +"</tr>");
+                });
+
+                isonline=ret['isonline'];
+                if(isonline==0){
+                    isonline="现场支付";
+                }
+                else if(isonline==1){
+                    if(ret['order_address']==""){
+                        addressinfo="收货信息有误<br>";
+                    }
+                    else{
+                        address=JSON.parse(ret['order_address']);
+                        console.log(address);
+                        $("#tableaddress").append("<thead class='tr'><tr class='tr'><th>收货人</th><th>电话</th></tr></thead>"
+                            +"<tr class='tr'><td>"+address['name']+"</td><td>"+address['tell']+"</td></tr>"
+                            +"<thead class='tr'><tr class='tr'><th>收货地址</th><th>门牌号</th></tr></thead>"
+                            +"<tr class='tr'><td>"+address['area']+"</td><td>"+address['door']+"</td></tr>");
+                        addressinfo="收货信息：<br>"+$("#address").html();
+                    }
+                    presend=ret['order_time'];
+                    if(presend==""){
+                        presend="立刻送达";
+                    }
+                    order_feedback=ret['feedback'];
+                    if(order_feedback==""){
+                        order_feedback="无";
+                    }
+                    order_feedback_type=JSON.parse(ret['feedbacktype']);
+                    if(!$.isArray(order_feedback_type)){
+                        tbrate="无评分";
+                    }
+                    else{
+                        $("#tablerate").append("<tr class='tr'><td>描述相符</td><td><div id='rate1'></div></td></tr>"
+                            +"<tr class='tr'><td>发货速度</td><td><div id='rate2'></div></td></tr>"
+                            +"<tr class='tr'><td>服务态度</td><td><div id='rate3'></div></td></tr>");
+                        rate.render({
+                            elem:'#rate1',
+                            value:order_feedback_type[0],
+                            readonly:true,
+                            theme: '#FF8000',
+                            text:true
+                        });
+                        rate.render({
+                            elem:'#rate2',
+                            value:order_feedback_type[1],
+                            readonly:true,
+                            theme: '#FF8000',
+                            text:true
+                        });
+                        rate.render({
+                            elem:'#rate3',
+                            value:order_feedback_type[2],
+                            readonly:true,
+                            theme: '#FF8000',
+                            text:true
+                        });
+                        tbrate="订单评分：<br>"+$("#rate").html()
+                        +"订单反馈："+order_feedback;
+                    }
+                    isonline="线上支付<br>"
+                    +"预计到达时间：<p style='color:red'>"+presend+"</p>"
+                    +addressinfo
+                    +tbrate;
+                }
+                addtime=ret['addtime'];
+                status=ret['status'];
+                if(status=="售后中"){
+                    status="售后中，处理完毕后请点击“已完成”<br><a href='/store/manage/afterorder?id="+order_id+"' class='layui-btn layui-btn-blue' type='button' id='afterorder'>已完成</a>";
+                }
+                
+            });
+            setTimeout(function(){
+                layer.open({
+                    title:"详细信息",
+                    content:"订单编号："+order_id+"<br>"
+                    +"订单状态："+status+"<br>"
+                    +"订单信息：<br>"+$("#table").html()
+                    +order_total
+                    +"创建订单方式："+isonline+"<br>"
+                    +"添加时间："+timestampToTime(addtime)
+                    ,
+                    btn:false,
+                    shadeClose:true,
+                    area:'480px',
+                    end:function(){
+                        $("tr").remove('.tr');
+                    },
+                });
+                
+            },800); 
+        });
+    });
+    </script>
+</body>
+</html>

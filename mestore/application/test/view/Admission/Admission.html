@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/store/assets/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/store/assets/css/login.css">
+    <link rel="icon" href="__STATIC__/favicon.ico">
+    <title>商家入驻</title>
+</head>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-row">
+            <div class="layui-col-md12" style="height: 50px">
+               <div style="position: absolute;transform: translate(-50%,0);left: 50%;top: 10px;">
+                    <h1 ">么么哒便利店商家入驻</h1>
+                </div>
+            </div>
+            <div class="layui-card layui-col-md3"></div>
+            <div class="layui-card layui-col-md6">
+                <div class="layui-card-header">商家入驻</div>
+                <form class="layui-form layui-card-body" action="/store/admission/add" method="post">
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店铺名</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="store_name" id="store_name" required  lay-verify="required" placeholder="请输入店铺名" autocomplete="off" class="layui-input">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店主名</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="owner_name" required  lay-verify="required" placeholder="请输入店主名" autocomplete="off" class="layui-input">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">身份证</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="owner_ID" id="owner_ID" required  lay-verify="required" placeholder="请输入身份证号码" autocomplete="off" class="layui-input">
+                    </div>
+                  </div>
+                  
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">电话号码</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="store_tell" id="tell" required  lay-verify="required" placeholder="请输入电话号码" autocomplete="off" class="layui-input">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店铺图片</label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn layui-btn-normal"  id="uploadimg">上传图片</button>
+                        <div class="layui-form-mid layui-word-aux">可拖拽上传图片，大小为2MB以内</div>
+                    </div>
+                    <div class="layui-form-mid" id="filebox"></div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">营业执照</label>
+                    <div class="layui-input-inline" id="filebox2">
+                        <button type="button" class="layui-btn layui-btn-normal"  id="uploadlicense">上传图片</button>
+                        <div class="layui-form-mid layui-word-aux">可拖拽上传图片，大小为2MB以内</div>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux" id="lbox"></div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店铺描述</label>
+                    <div class="layui-input-block">
+                      <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店铺地址</label>
+                    <div class="layui-input-block">
+                      <input type="text" name="store_address" required  lay-verify="required" placeholder="请输入店铺地址" autocomplete="off" class="layui-input">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-inline">
+                     <input type="password" name="pwd" id="pwd" required  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">确认密码</label>
+                    <div class="layui-input-inline">
+                      <input type="password" name="confirmpwd" id="confirmpwd" required  lay-verify="required" placeholder="请确认密码" autocomplete="off" class="layui-input">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <div class="layui-input-block">
+                      <button class="layui-btn" type="submit" lay-submit lay-filter="formDemo">立即提交</button>
+                      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                  </div>
+                </form>  
+            </div>
+        </div>
+    </div>
+    <script src="__STATIC__/store/assets/layui.js"></script>
+    <script src="__STATIC__/store/login.js" data-main="login"></script>
+    <script src="__STATIC__/store/index.js" data-main="home"></script>
+    <script src="__STATIC__/store/assets/layui.all.js"></script>
+    <script type="text/javascript" src="__STATIC__/store/assets/jquery.min.js"></script>
+    <script>
+        var re_tell;
+        var re_name;
+        function isCardNo(card) {  
+           var pattern = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;  
+           return pattern.test(card); 
+        }
+
+        function isPhoneNo(phone) {  
+            var pattern = /^1[34578]\d{9}$/;  
+            return pattern.test(phone);  
+        }
+
+        var form = layui.form,layer = layui.layer;
+        layui.use('form', function(){
+        var form = layui.form;
+          
+        form.on('submit(formDemo)', function(data){
+            if(isCardNo($.trim($('#owner_ID').val())) == false) {
+                layer.msg("身份证格式错误！");
+                $('#owner_ID').focus();
+                return false;
+            }
+            if(isPhoneNo($.trim($('#tell').val())) == false) {
+                layer.msg("电话格式错误！");
+                $('#tell').focus();
+                return false;
+            }
+            if($.trim($("#pwd").val())!=$.trim($("#confirmpwd").val())){
+                layer.msg('密码与确认密码不一致！');
+                $("#confirmpwd").focus();
+                return false;
+            }
+            if($("#tell").val()==re_tell){
+                layer.msg("手机号已被注册！请重新输入！");
+                $("#tell").focus();
+                return false;
+            }
+            if($("#store_name").val()==re_name){
+                layer.msg("店铺名已被注册！请重新输入！");
+                $("#store_name").focus();
+                return false;
+            }
+        });
+    });
+        //layui上传图片
+    layui.use('upload', function(){
+    var upload = layui.upload;
+    
+    upload.render({
+        elem: '#uploadimg' //绑定元素
+        ,url: '/store/admission/upimg'   //上传接口
+        ,method: 'post' 
+        ,done: function(response){
+            console.log(response);
+            var html = '<div style="position: relative;margin-right: 20px;margin-bottom: 15px;width: 100px;display: inline-block;border: 1px solid #CCC;background:#EEE;">'
+                    +'<span style="display: block;width: 90%;border: 1px solid #F2F1F0;margin: 5px;overflow: hidden;">'
+                      +'<img src="'+response+'" style="width: 100%;" />'
+                    +'</span>'
+                    +'<input type="hidden" name="store_imgs[]" value="'+response+'" />'
+                    +'<a onclick="delImg(this);" style="z-index: 10;display: block;top: -8px;cursor:pointer;right: -8px;position:absolute;width: 20px;height: 20px;background: #CCC;border-radius:100%;text-align:center;line-height: 20px;border: 1px solid #C1C1C1;color: #555;">X</ a>'
+                  +'</div>';
+           //上传完毕回调
+            $('#filebox').append(html);
+
+        }
+        ,error: function(){
+       //请求异常回调
+        }
+        ,accept:"images"
+        ,size: "2048"
+        ,drag:true
+    });
+    upload.render({
+        elem: '#uploadlicense' //绑定元素
+        ,url: '/store/admission/upimg'   //上传接口
+        ,method: 'post' 
+        ,done: function(response){
+            console.log(response);
+            var html = '<div style="position: relative;margin-right: 20px;margin-bottom: 15px;width: 100px;display: inline-block;border: 1px solid #CCC;background:#EEE;">'
+                    +'<span style="display: block;width: 90%;border: 1px solid #F2F1F0;margin: 5px;overflow: hidden;">'
+                      +'<img src="'+response+'" style="width: 100%;" />'
+                    +'</span>'
+                    +'<input type="hidden" name="store_license" value="'+response+'" />'
+                    +'<a onclick="delImg(this);" style="z-index: 10;display: block;top: -8px;cursor:pointer;right: -8px;position:absolute;width: 20px;height: 20px;background: #CCC;border-radius:100%;text-align:center;line-height: 20px;border: 1px solid #C1C1C1;color: #555;">X</ a>'
+                  +'</div>';
+           //上传完毕回调
+           $('#lbox').html(html);
+        }
+        ,error: function(){
+       //请求异常回调
+        }
+        ,accept:"images"
+        ,size: "2048"
+        ,drag:true
+  });
+});
+
+    function delImg(obj)
+    {
+        $(obj).parent('div').remove();
+    }
+
+    $("#confirmpwd").change(function(){
+         if($("#pwd").val()!=$("#confirmpwd").val()){
+            layer.msg('密码与确认密码不一致！');
+            $("#confirmpwd").focus();
+        }
+    });  //直接提示密码不一致
+   
+    
+    $("#tell").change(function(){
+        var tel=$("#tell").val();
+        $.post("/store/admission/istellexist",{'store_tell':tel},function(ret){
+            if(tel==ret){
+                layer.msg('手机号已被注册！请重新输入！');
+                $("#tell").focus();
+            }
+            re_tell=ret;
+        });
+    });
+
+    $("#store_name").change(function(){
+        var name=$("#store_name").val();
+        $.post("/store/admission/isnameexist",{'store_name':name},function(ret){
+            if(name==ret){
+                layer.msg('店铺名已被注册！请重新输入！');
+                $("#store_name").focus();
+            }
+            re_name=ret;
+        });
+    });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<view class="container" >
+	<view class="header">
+		<view class="search">
+			<image class="icon" src="/imgs/index/icon_search.png"/>
+			<input bindinput="inputSearch" placeholder="{{placeholder}}" auto-focus/>
+		</view>
+		<button class="{{searchWords.length?'':'disabled'}}" size="mini" hover-class="hover" loading="" plain="" disabled="{{!searchWords.length}}"
+				bindtap="doSearch" >搜索
+		</button>
+	</view>
+	<view id="result" class="result" hidden="{{!showResult}}">
+		<scroll-view scroll-y="true">
+
+      <!-- 商店列表   -->
+      <view class="page__bd" style='margin:20rpx;' wx:for="{{re}}" wx:for-index="store_id" wx:for-key="key" wx:for-item="item">
+        <view class="weui-panel weui-panel_access">
+          <view class="weui-panel__bd">
+            <navigator class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" url="/page/shop/shop?store_id={{item.store_id}}">
+              <view class="weui-media-box__hd weui-media-box__hd_in-appmsg" style='width:120rpx;height:120rpx;'>
+                <cover-image class="weui-media-box__thumb" src="http://mestore.vicp.io{{item.store_logo}}" />
+              </view>
+              <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+                <view class="weui-media-box__title" style='font-size:40rpx;' >{{item.store_name}}</view>
+                <view class="weui-media-box__desc" style='font-size:28rpx;color:#46a3ff'>{{item.goods_name}}: {{item.goods_price}}元</view>
+              </view>
+            </navigator>
+          </view>
+          <view class="weui-panel__ft">
+            <view class="weui-cell weui-cell_access">
+              <image src='/imgs/index/tell.png' style='width:26rpx;height:26rpx;margin:15rpx;'></image>
+              <view class="weui-cell__bd" style='color:#999;font-size:28rpx;'bindtap="connectstore" data-id="{{item.id}}" data-tell="{{item.store_tell}}">联系商家</view>
+              <image src='/imgs/index/location.png' style='width:28rpx;height:28rpx;margin:15rpx;'></image>
+              <view class="weui-cell__bd" style='color:#999;font-size:28rpx;'>距离：{{item.distance}}</view>
+              <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+       <!-- 商店列表   -->
+			 <view class="loading" bindtap='downloading' style='color:#999;font-size:28rpx;'>上拉刷新</view>
+		</scroll-view>
+	</view>
+</view>

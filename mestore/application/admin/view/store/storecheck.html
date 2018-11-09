@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="__STATIC__/store/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/store/css/view.css"/>
+    <title></title>
+</head>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-row">
+            <div class="layui-card layui-anim layui-anim-upbit">
+                <div class="layui-card-header">商家审核</div>
+                <form class="layui-form layui-card-body"  enctype="multipart/form-data" method="post">
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店铺名</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="store_name" id="store_name" required  lay-verify="required" autocomplete="off" class="layui-input" readonly="true" value="{$result.store_name}">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店主名</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="owner_name" required  lay-verify="required"  autocomplete="off" class="layui-input" readonly="true" value="{$result.owner_name}">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">身份证</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="owner_ID" id="owner_ID" required  lay-verify="required" readonly="true" autocomplete="off" class="layui-input" value="{$result.owner_ID}">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="pwd" id="pwd" required  lay-verify="required" readonly="true" autocomplete="off" class="layui-input" value="{$result.pwd}">
+                    </div>
+                  </div>
+
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">电话号码</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="store_tell" id="tell" required  lay-verify="required" readonly="true"  autocomplete="off" class="layui-input" value="{$result.store_tell}">
+                    </div>
+                  </div>
+
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店铺图片</label>
+                    <div class="layui-input-inline">
+                    {foreach name="pic" item="vo"}
+                    <div id="store_pic" style="position: relative; width: 200px;background: #eee;border:1px solid #ccc;margin: 10px;float: left;">
+                    <img src="{$vo}" style="width: 95%;padding: 5px" />
+                    </div>
+                    {/foreach}
+                   
+                    </div>
+                  </div>
+
+
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">营业执照</label>
+                    <div class="layui-input-inline">           
+                      <img src="{$result.License}" style="width: 200px;" />
+                    </div>
+                  </div>
+
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店铺描述</label>
+                    <div class="layui-input-block">
+                      <textarea class="layui-textarea" type="text" name="description" readonly="true"  value="{$result.description}">{$result.description}</textarea>
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">店铺地址</label>
+                    <div class="layui-input-block">
+                      <input type="text" name="store_address" required  lay-verify="required" readonly="true" autocomplete="off" class="layui-input" value="{$result.store_address}">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <div class="layui-input-block">
+                    <input type="hidden" name="id" value="{$result.id}" />
+                      <a  href="/admin/store/insert?id={$result.id}" type="button" data-method="offset" data-type="auto" class="layui-btn layui-btn-normal" id="insert">通过审核</a>
+                      <a href="/admin/store/refuse?id={$result.id}" type="button" data-method="offset" data-type="auto" class="layui-btn layui-btn-normal" id="test">拒绝入驻</a>
+                      
+                    </div>
+                  </div>
+                </form>  
+            </div>
+        </div>
+    </div>
+    <script src="__STATIC__/store/layui.all.js"></script>
+    <script type="text/javascript" src="__STATIC__/store/jquery.min.js"></script>
+    
+</body>
+</html>
