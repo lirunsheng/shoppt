@@ -1,0 +1,16 @@
+<view class="phone-box">
+    <view class="check-box" hidden='{{judge}}'>
+        <view class="title">输入您当前账号绑定的手机号码以校验信息</view>
+        <input class="input" type="number"  placeholder="手机号码" bindinput="bindoldtellInput"/>
+    </view>
+    <view class="edit-box">
+        <view class="title">输入您需要绑定的新手机号码</view>
+        <input class="input new-phone" type="number" bindinput="bindnewtellInput" placeholder="手机号码"/>
+        <view class="code-box">
+            <input class="input" type="text" placeholder="短信验证码" bindinput="updateCode"/>
+        </view>
+    </view>
+    <button bindtap="reSendPhoneNum" size="mini" disabled="{{isdisable}}" style="margin-top:23rpx;margin-right:23rpx">{{show}}</button>
+    <button class="bind-btn" type="primary" hover-class="none"  bindtap="changephone">验证重新绑定</button>
+    
+</view>

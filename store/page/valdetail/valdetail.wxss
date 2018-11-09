@@ -1,0 +1,2 @@
+/* page/valu_detail/valdetail.wxss */
+page{  background: #fff;}.kuaidi{  height: 160rpx;  border-top: 1rpx solid #f3f3f3;  border-bottom: 20rpx solid #f3f3f3;  background: url(../../../images/member_list_arrow.png) no-repeat 95% center;  background-size: 40rpx 40rpx;}.kuaidi .kuaidiIcon{  float: left;  width: 100rpx;  height: 100rpx;  margin: 30rpx 30rpx 0 40rpx;}.kuaidi .kuaidiIcon image{  width: 100%;  height: 100%;}.kuaidi .kuaidiInfo{  float: left;  font-size: 34rpx;}

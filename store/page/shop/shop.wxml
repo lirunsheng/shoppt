@@ -1,0 +1,58 @@
+<view class="container">
+	<view class="header {{scrollDown?'hidden':''}}">
+		<!-- <image class="logo" src="{{shop.logo}}"/> -->
+    <image class="logo" src="https://huazai233.picp.vip{{goods[0].store_logo}}"></image>
+		<view class="name ellipsis">{{goods[0].store_name}}</view>
+		<view class="welcome ellipsis">公告：欢迎光临{{goods[0].store_name}}！</view>
+		<view class="follow" bindtap="follow">{{followed?'已收藏':'收藏'}}</view>
+		<view class="line"></view>
+		<view class="desc">{{goods[0].description}}</view>
+	</view>
+	<view class="content-container">
+		<scroll-view class="classify-container" scroll-y="true">
+			<view class="classify {{classifySeleted==classify.id?'active':''}}" wx:for="{{goodsList}}" wx:for-item="classify" wx:key="id" data-id="{{classify.id}}" bindtap="tapClassify">
+				<view class="name">{{classify.classifyName}}</view>
+			</view>
+		</scroll-view>
+		<scroll-view class="goods-container" scroll-y="true" scroll-into-view="{{classifyViewed}}" bindscroll="onGoodsScroll">
+			<view wx:for="{{goodsList}}" wx:for-item="classify" wx:key="id" id="{{classify.id}}">
+				<view class="title">{{classify.classifyName}}</view>
+				<view class="goods" wx:for="{{classify.goods}}" wx:for-item="id" wx:key="">
+					<!-- <image class="pic" src="{{goods[id].pic}}"></image> -->
+          <image class="pic" src="{{goods[id].goods_file}}"></image>
+					<view class="name">{{goods[id].goods_name}}</view>
+					<view class="sold">库存：{{goods[id].goods_stork}} </view>
+					<view class="price">￥{{goods[id].goods_price}}</view>
+					<view class="addCart" bindtap="tapAddCart" data-gid="{{goods[id].goods_name}}">
+						<image src="https://huazai233.picp.vip/wximgs/shop/plus.png"></image>
+					</view>
+				</view>
+			</view>
+		</scroll-view>
+	</view>
+	<view class="cart-detail" hidden="{{!showCartDetail||!cart.count}}">
+		<view class="mask" bindtap="hideCartDetail"></view>
+		<view class="list">
+			<view class="item" wx:for="{{cart.gc}}" wx:for-index="id" wx:key="id">
+				<view class="name ellipsis">{{goods[id].goods_name}}</view>
+				<view class="total">￥{{goods[id].goods_price * cart.gc[id]}}</view>
+				<view class="reduce" data-gid="{{goods[id].goods_name}}" bindtap="tapReduceCart">-</view>
+				<view class="num">{{cart.list[goods[id].goods_name]}}</view>
+				<view class="add" data-gid="{{goods[id].goods_name}}" bindtap="tapAddCart">+</view>
+			</view>
+		</view>
+	</view>
+	<view class="cart">
+		<view class="data" bindtap="showCartDetail">
+			<view class="icon">
+				<image src="https://huazai233.picp.vip/wximgs/shop/cart.png"></image>
+				<view class="count">{{cart.count}}</view>
+			</view>
+			<view class="total">￥{{cart.order_total}}</view>
+		</view>
+		<form bindsubmit="submit" report-submit="true">
+			<!--<view formType="submit" class="submit">去结算</view>-->
+			<button class="{{cart.count?'':'disabled'}}" formType="submit" disabled="{{!cart.count}}" >去结算</button>
+		</form>
+	</view>
+</view>

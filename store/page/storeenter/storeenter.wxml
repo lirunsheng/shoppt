@@ -1,0 +1,56 @@
+<!--page/storeenter/storeenter.wxml-->
+<view>
+<image src='https://huazai233.picp.vip/wximgs/shop/enter.png' style='width:100%;height:280rpx;'></image>
+</view>
+<view class="page">
+    
+    <view class="page__bd">
+        <view class="weui-panel weui-panel_access">
+            <view class="weui-panel__hd">入驻流程</view>
+            <view class="weui-panel__bd">
+                <navigator url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+                    <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+                        <image style="width:70px;height:60px;" class="weui-media-box__thumb" src="https://huazai233.picp.vip/wximgs/shop/enter1.png" />
+                    </view>
+                    <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+                        <view class="weui-media-box__title" style='color:#999'>流程一</view>
+                        <view class="weui-media-box__desc" style='overflow:visible;color:black;'>电脑端登录访问后,点击商家入驻 </view>
+                        <view class="weui-media-box__desc" style='overflow:visible;color:black;font-size:22rpx;'> https://huazai233.picp.vip/store/login/index</view>
+                    </view>
+                </navigator>
+                <navigator url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+                    <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+                        <image style="width:70px;height:60px;" class="weui-media-box__thumb" src="https://huazai233.picp.vip/wximgs/shop/enter2.png" />
+                    </view>
+                    <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+                        <view class="weui-media-box__title" style='color:#999'>流程二</view>
+                        <view class="weui-media-box__desc" style='overflow:visible;color:black'>在仔细阅读入驻协议后，填写信息。</view>
+                    </view>
+                </navigator>
+                <navigator url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+                    <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+                        <image style="width:70px;height:60px;" class="weui-media-box__thumb" src="https://huazai233.picp.vip/wximgs/shop/enter3.png" />
+                    </view>
+                    <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+                        <view class="weui-media-box__title" style='color:#999'>流程三</view>
+                        <view class="weui-media-box__desc" style='overflow:visible;color:black'>填写完整信息后，等待审核即可。</view>
+                    </view>
+                </navigator>
+            </view>
+            <view class="weui-panel__ft">
+                <view class="weui-cell weui-cell_access weui-cell_link">
+        
+                    <view style='color:#46a3ff'>https://huazai233.picp.vip/store/login/index</view>
+                </view>
+            </view>
+            <view class="weui-cells__title">访问网址</view>
+        <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell">
+                <view class="weui-cell__bd"  bindtap='setClipboard'>一键复制</view>
+                <view class="weui-cell__ft">请复制到电脑端访问</view>
+            </view>
+        </view>
+        </view>
+    </view>
+    
+</view>

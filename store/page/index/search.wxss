@@ -1,0 +1,86 @@
+.header {
+	display: -webkit-flex;
+	padding: 20rpx;
+	background: #fff;
+}
+
+.header .icon {
+	width: 40rpx;
+	height: 40rpx;
+	vertical-align: top;
+}
+
+.header .search {
+	-webkit-flex: 1;
+	color: #000;
+	font-size: 30rpx;
+	line-height: 40rpx;
+	padding: 10rpx;
+	border-radius: 10rpx;
+	background: #eee;
+}
+
+.header .search .icon {
+	float: left;
+	margin: 1rpx 5rpx 0 0;
+
+}
+
+.header button {
+	margin-left: 20rpx;
+	font-size: 30rpx;
+    color:white;
+  background-color: #46a3ff;
+}
+
+.header input {
+	height: 30rpx;
+	min-height: 40rpx;
+}
+
+.result {
+	padding: 0;
+}
+
+.result scroll-view {
+	position: absolute;
+	top: 110rpx;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: #fff;
+}
+
+.result .shop {
+	padding: 10rpx 0;
+	border-bottom: 1rpx solid #efefef;
+}
+
+.result .shop image {
+	width: 100%;
+	height: 266rpx;
+}
+
+.result .shop .storeid{
+  
+  text-align: center;
+  width: 100%;
+  height: 250rpx;
+}
+
+.result .shop .storeid .s1{
+  font-size: 50rpx;
+  color:#46a3ff;
+}
+
+.result .shop .storeid .s2{
+  font-size: 30rpx;
+  color: red;
+}
+
+.loading {
+	font-size: 32rpx;
+	text-align: center;
+	line-height: 2;
+	margin-bottom: 20rpx;
+}
